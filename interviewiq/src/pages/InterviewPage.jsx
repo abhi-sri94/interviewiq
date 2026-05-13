@@ -58,7 +58,7 @@ function InterviewPage() {
 
     const fetchQuestion = async () => {
         try {
-            const response = await fetch("http://localhost:8000/generate-question");
+            const response = await fetch("https://interviewiq-5jzl.onrender.com/generate-question");
 
             const data = await response.json();
 
@@ -82,7 +82,7 @@ function InterviewPage() {
             setCodingMode(true);
 
             const res = await fetch(
-                "http://localhost:8000/generate-coding-question"
+                "http://https://interviewiq-5jzl.onrender.com/generate-coding-question"
             );
 
             const data = await res.json();
@@ -388,7 +388,7 @@ function InterviewPage() {
                                 try {
                                     setLoading(true);
 
-                                    const res = await fetch("http://localhost:8000/analyze-answer", {
+                                    const res = await fetch("https://interviewiq-5jzl.onrender.com/analyze-answer", {
                                         method: "POST",
                                         headers: {
                                             "Content-Type": "application/json",
