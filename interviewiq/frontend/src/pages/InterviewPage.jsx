@@ -1,6 +1,10 @@
 import { motion } from "framer-motion";
 import { useState, useEffect, useRef } from "react";
 import { TypeAnimation } from "react-type-animation";
+import Editor from "@monaco-editor/react";
+import { FiMic, FiMicOff, FiVideo, FiVideoOff } from "react-icons/fi";
+import { FaRobot, FaUserCircle } from "react-icons/fa";
+import { BiCodeAlt } from "react-icons/bi";
 
 const SpeechRecognition =
     window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -53,8 +57,11 @@ function InterviewPage() {
 
     const [currentCodingQuestion, setCurrentCodingQuestion] =
         useState(null);
-    // const [code, setCode] = useState("");
-
+    
+    // Progress Tracking
+    const [questionCount, setQuestionCount] = useState(1);
+    const TOTAL_QUESTIONS = 5;
+    const progressPercentage = Math.min((questionCount / TOTAL_QUESTIONS) * 100, 100);
 
     const fetchQuestion = async () => {
         try {
@@ -72,7 +79,10 @@ function InterviewPage() {
     };
 
     const nextQuestion = async () => {
-        console.log("BUTTON CLICKED");
+        setQuestionCount(prev => prev + 1);
+        setAnswer("");
+        setFeedback("");
+        setFollowUpQuestion("");
         await fetchQuestion();
     };
 
@@ -157,11 +167,20 @@ function InterviewPage() {
                     {currentCodingQuestion.question}
                 </p>
 
-                <textarea
-                    value={code}
-                    onChange={(e) => setCode(e.target.value)}
-                    className="w-full h-[400px] bg-slate-900 border border-slate-700 rounded-2xl p-4 font-mono"
-                />
+                <div className="w-full h-[400px] border border-slate-700 rounded-2xl overflow-hidden">
+                    <Editor
+                        height="100%"
+                        defaultLanguage="javascript"
+                        theme="vs-dark"
+                        value={code}
+                        onChange={(value) => setCode(value || "")}
+                        options={{
+                            minimap: { enabled: false },
+                            fontSize: 16,
+                            padding: { top: 16 }
+                        }}
+                    />
+                </div>
 
                 <div className="flex gap-4 mt-6">
 
@@ -197,8 +216,8 @@ function InterviewPage() {
                 {/* AI Interviewer */}
                 <div className="bg-slate-800 rounded-3xl p-8 text-center">
 
-                    <div className="w-28 h-28 rounded-full bg-cyan-500 mx-auto flex items-center justify-center text-5xl">
-                        🤖
+                    <div className={`w-28 h-28 rounded-full bg-cyan-500 mx-auto flex items-center justify-center text-5xl transition-all duration-300 ${loading ? "shadow-[0_0_30px_rgba(6,182,212,0.6)] animate-pulse" : ""}`}>
+                        <FaRobot className="text-white text-5xl" />
                     </div>
 
                     <h2 className="text-2xl font-bold mt-6">
@@ -220,12 +239,12 @@ function InterviewPage() {
                         </span>
 
                         <span className="text-cyan-400">
-                            65%
+                            {progressPercentage}%
                         </span>
                     </div>
 
                     <div className="w-full h-3 bg-slate-800 rounded-full overflow-hidden">
-                        <div className="w-[65%] h-full bg-cyan-500"></div>
+                        <div className="h-full bg-cyan-500 transition-all duration-500" style={{ width: `${progressPercentage}%` }}></div>
                     </div>
 
                 </div>
@@ -261,12 +280,12 @@ function InterviewPage() {
 
                     <div className="flex gap-4">
 
-                        <button className="bg-slate-800 px-6 py-3 rounded-2xl">
-                            🎤 Mic On
+                        <button className="bg-slate-800 px-6 py-3 rounded-2xl flex items-center gap-2 hover:bg-slate-700 transition">
+                            <FiMic className="text-xl" /> Mic On
                         </button>
 
-                        <button className="bg-slate-800 px-6 py-3 rounded-2xl">
-                            📹 Camera On
+                        <button className="bg-slate-800 px-6 py-3 rounded-2xl flex items-center gap-2 hover:bg-slate-700 transition">
+                            <FiVideo className="text-xl" /> Camera On
                         </button>
 
                     </div>
@@ -306,7 +325,7 @@ function InterviewPage() {
                                 <div className="flex items-center gap-4 mb-6">
 
                                     <div className="w-14 h-14 rounded-full bg-cyan-500 flex items-center justify-center text-2xl">
-                                        👨‍💻
+                                        <FaUserCircle className="text-white text-3xl" />
                                     </div>
 
                                     <div>
@@ -337,9 +356,9 @@ function InterviewPage() {
 
                                 <div className="flex items-center gap-4 mb-6">
 
-                                    <div className="w-14 h-14 rounded-full bg-purple-500 flex items-center justify-center text-2xl animate-pulse">
-                                        🤖
-                                    </div> ̰
+                                    <div className={`w-14 h-14 rounded-full bg-purple-500 flex items-center justify-center text-2xl ${loading ? "animate-pulse shadow-[0_0_15px_rgba(168,85,247,0.5)]" : ""}`}>
+                                        <FaRobot className="text-white" />
+                                    </div>
 
                                     <div>
                                         <h3 className="text-xl font-bold">
@@ -447,8 +466,13 @@ function InterviewPage() {
 
                         <button
                             onClick={isListening ? stopListening : startListening}
-                            className="px-6 py-3 bg-purple-600 hover:bg-purple-700 transition rounded-2xl text-lg font-semibold"
+                            className={`px-6 py-3 flex items-center gap-2 transition rounded-2xl text-lg font-semibold ${
+                                isListening 
+                                    ? "bg-red-500 hover:bg-red-600 shadow-[0_0_20px_rgba(239,68,68,0.5)] animate-pulse" 
+                                    : "bg-purple-600 hover:bg-purple-700"
+                            }`}
                         >
+                            {isListening ? <FiMicOff className="text-2xl" /> : <FiMic className="text-2xl" />}
                             {isListening ? "Stop Mic" : "Start Mic"}
                         </button>
 
@@ -463,9 +487,9 @@ function InterviewPage() {
                         </button>
                         <button
                             onClick={startCodingRound}
-                            className="px-6 py-3 bg-yellow-500 hover:bg-yellow-600 transition rounded-2xl text-lg font-semibold"
+                            className="px-6 py-3 flex items-center gap-2 bg-yellow-500 hover:bg-yellow-600 transition rounded-2xl text-lg font-semibold text-slate-900"
                         >
-                            Start Coding Round
+                            <BiCodeAlt className="text-2xl" /> Start Coding Round
                         </button>
                     </div>
                 </div>
