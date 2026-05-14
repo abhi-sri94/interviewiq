@@ -58,7 +58,7 @@ function InterviewPage() {
 
     const fetchQuestion = async () => {
         try {
-            const response = await fetch("https://interviewiq-5jzl.onrender.com/generate-question");
+            const response = await fetch("https://interviewiq-backend-6iev.onrender.com/generate-question");
 
             const data = await response.json();
 
@@ -82,7 +82,7 @@ function InterviewPage() {
             setCodingMode(true);
 
             const res = await fetch(
-                "https://interviewiq-5jzl.onrender.com/generate-coding-question"
+                "https://interviewiq-backend-6iev.onrender.com/generate-coding-question"
             );
 
             const data = await res.json();
@@ -361,17 +361,17 @@ function InterviewPage() {
 
                                 <div className="flex items-center justify-between">
                                     <span>Technical Accuracy</span>
-                                    <span className="text-cyan-400">{answer.split(" ").length > 15 ? "85%" : "45%"}</span>
+                                    <span className="text-cyan-400">{technicalScore}%</span>
                                 </div>
 
                                 <div className="flex items-center justify-between">
                                     <span>Communication</span>
-                                    <span className="text-cyan-400">{answer.includes(".") ? "90%" : "55%"}</span>
+                                    <span className="text-cyan-400">{communicationScore}%</span>
                                 </div>
 
                                 <div className="flex items-center justify-between">
                                     <span>Confidence</span>
-                                    <span className="text-cyan-400">{answer.includes(".") && answer.split(" ").length > 12 ? "88%" : "40%"}</span>
+                                    <span className="text-cyan-400">{confidenceScore}%</span>
                                 </div>
 
                             </div>
@@ -388,7 +388,7 @@ function InterviewPage() {
                                 try {
                                     setLoading(true);
 
-                                    const res = await fetch("https://interviewiq-5jzl.onrender.com/analyze-answer", {
+                                    const res = await fetch("https://interviewiq-backend-6iev.onrender.com/analyze-answer", {
                                         method: "POST",
                                         headers: {
                                             "Content-Type": "application/json",
