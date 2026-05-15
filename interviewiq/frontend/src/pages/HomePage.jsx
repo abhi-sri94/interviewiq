@@ -292,11 +292,16 @@ function HomePage() {
 
                             <div className="flex flex-col md:flex-row justify-center gap-4 md:gap-6 mt-10 md:mt-12">
 
-                                <button className="w-full md:w-auto bg-cyan-500 hover:bg-cyan-600 transition-all duration-300 px-10 py-4 md:py-5 rounded-2xl text-lg font-bold shadow-lg shadow-cyan-500/30">
-                                    Start Free
-                                </button>
+                                <Link to="/interview" state={{ role: selectedRole }} className="w-full md:w-auto">
+                                    <button className="w-full w-full bg-cyan-500 hover:bg-cyan-600 transition-all duration-300 px-10 py-4 md:py-5 rounded-2xl text-lg font-bold shadow-lg shadow-cyan-500/30">
+                                        Start Free
+                                    </button>
+                                </Link>
 
-                                <button className="w-full md:w-auto border border-slate-500 hover:border-cyan-400 hover:text-cyan-400 transition-all duration-300 px-10 py-4 md:py-5 rounded-2xl text-lg font-bold">
+                                <button 
+                                    onClick={() => document.getElementById('how-it-works')?.scrollIntoView({ behavior: 'smooth' })}
+                                    className="w-full md:w-auto border border-slate-500 hover:border-cyan-400 hover:text-cyan-400 transition-all duration-300 px-10 py-4 md:py-5 rounded-2xl text-lg font-bold"
+                                >
                                     Learn More
                                 </button>
 
