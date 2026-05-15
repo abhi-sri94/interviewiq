@@ -58,7 +58,10 @@ function HomePage() {
                         </button>
                     </Link>
 
-                    <button className="w-full md:w-auto border border-slate-600 hover:border-cyan-400 hover:text-cyan-400 transition-all duration-300 px-8 py-4 rounded-2xl text-lg">
+                    <button 
+                        onClick={() => document.getElementById('how-it-works')?.scrollIntoView({ behavior: 'smooth' })}
+                        className="w-full md:w-auto border border-slate-600 hover:border-cyan-400 hover:text-cyan-400 transition-all duration-300 px-8 py-4 rounded-2xl text-lg"
+                    >
                         Watch Demo
                     </button>
                 </motion.div>
@@ -169,7 +172,7 @@ function HomePage() {
 
             </section >
             {/* How It Works */}
-            < section className="px-6 md:px-8 py-20 md:py-28 bg-slate-950/40" >
+            < section id="how-it-works" className="px-6 md:px-8 py-20 md:py-28 bg-slate-950/40" >
 
                 <div className="max-w-7xl mx-auto">
 
