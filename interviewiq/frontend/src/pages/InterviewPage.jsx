@@ -483,6 +483,19 @@ function InterviewPage() {
                                 <p className="text-white text-lg">
                                     {followUpQuestion}
                                 </p>
+
+                                <button 
+                                    onClick={() => {
+                                        setQuestion(followUpQuestion);
+                                        setFollowUpQuestion("");
+                                        setAnswer("");
+                                        setFeedback("");
+                                        setTimeLeft(300);
+                                    }}
+                                    className="mt-4 px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white text-sm font-bold rounded-xl transition shadow-lg"
+                                >
+                                    Answer this Follow-up
+                                </button>
                             </div>
                         )}
                     </div>
