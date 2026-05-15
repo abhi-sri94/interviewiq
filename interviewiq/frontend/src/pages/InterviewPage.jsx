@@ -5,12 +5,14 @@ import Editor from "@monaco-editor/react";
 import { FiMic, FiMicOff, FiVideo, FiVideoOff } from "react-icons/fi";
 import { FaRobot, FaUserCircle } from "react-icons/fa";
 import { BiCodeAlt } from "react-icons/bi";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
 const SpeechRecognition =
     window.SpeechRecognition || window.webkitSpeechRecognition;
 
 function InterviewPage() {
+    const location = useLocation();
+    const role = location.state?.role || "Frontend React Developer";
 
     const [code, setCode] = useState("");
 
@@ -92,7 +94,7 @@ function InterviewPage() {
 
     const fetchQuestion = async () => {
         try {
-            const response = await fetch("https://interviewiq-backend-6iev.onrender.com/generate-question");
+            const response = await fetch(`https://interviewiq-backend-6iev.onrender.com/generate-question?role=${encodeURIComponent(role)}`);
 
             const data = await response.json();
 
@@ -119,7 +121,7 @@ function InterviewPage() {
             setCodingMode(true);
 
             const res = await fetch(
-                "https://interviewiq-backend-6iev.onrender.com/generate-coding-question"
+                `https://interviewiq-backend-6iev.onrender.com/generate-coding-question?role=${encodeURIComponent(role)}`
             );
 
             const data = await res.json();
@@ -268,7 +270,7 @@ function InterviewPage() {
                     </h2>
 
                     <p className="text-slate-400 mt-3">
-                        Frontend React Interview
+                        {role} Interview
                     </p>
 
                 </div>

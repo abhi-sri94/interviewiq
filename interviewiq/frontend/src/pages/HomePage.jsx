@@ -1,9 +1,10 @@
 import Navbar from "../components/Navbar";
 import { motion } from "framer-motion";
 import { Link, useNavigate } from "react-router-dom";
-
+import { useState } from "react";
 
 function HomePage() {
+    const [selectedRole, setSelectedRole] = useState("Frontend React Developer");
 
 
     return (
@@ -45,18 +46,34 @@ function HomePage() {
                     feedback, improve confidence, and track your performance.
                 </motion.p>
                 {/* Buttons */}
-                {/* Buttons */}
+                {/* Role Selector & Buttons */}
                 <motion.div
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.6, duration: 0.8 }}
-                    className="flex flex-col md:flex-row gap-4 md:gap-5 mt-10 relative z-50 w-full md:w-auto"
+                    className="flex flex-col items-center gap-4 mt-8 relative z-50 w-full md:w-auto"
                 >
-                    <Link to="/interview" className="w-full md:w-auto">
-                        <button className="w-full md:w-auto bg-cyan-500 hover:bg-cyan-600 transition px-10 py-4 rounded-2xl text-lg font-semibold cursor-pointer">
-                            Start Interview
-                        </button>
-                    </Link>
+                    <div className="w-full md:w-auto bg-slate-900/80 border border-slate-700 rounded-2xl px-6 py-3 flex items-center justify-between backdrop-blur-md">
+                        <span className="text-slate-400 mr-4 font-semibold">Select Role:</span>
+                        <select 
+                            value={selectedRole}
+                            onChange={(e) => setSelectedRole(e.target.value)}
+                            className="bg-transparent text-cyan-400 outline-none font-bold cursor-pointer text-lg"
+                        >
+                            <option className="bg-slate-900 text-white" value="Frontend React Developer">Frontend React</option>
+                            <option className="bg-slate-900 text-white" value="Backend Node.js Developer">Backend Node.js</option>
+                            <option className="bg-slate-900 text-white" value="Full Stack Developer">Full Stack</option>
+                            <option className="bg-slate-900 text-white" value="Human Resources (HR)">HR / Behavioral</option>
+                            <option className="bg-slate-900 text-white" value="Data Structures & Algorithms">DSA / Problem Solving</option>
+                        </select>
+                    </div>
+
+                    <div className="flex flex-col md:flex-row gap-4 md:gap-5 w-full md:w-auto mt-2">
+                        <Link to="/interview" state={{ role: selectedRole }} className="w-full md:w-auto">
+                            <button className="w-full md:w-auto bg-cyan-500 hover:bg-cyan-600 transition px-10 py-4 rounded-2xl text-lg font-semibold cursor-pointer">
+                                Start Interview
+                            </button>
+                        </Link>
 
                     <button 
                         onClick={() => document.getElementById('how-it-works')?.scrollIntoView({ behavior: 'smooth' })}
@@ -64,6 +81,7 @@ function HomePage() {
                     >
                         Watch Demo
                     </button>
+                    </div>
                 </motion.div>
 
                 {/* Stats */}

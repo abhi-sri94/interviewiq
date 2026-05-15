@@ -22,7 +22,7 @@ app.get("/", (req, res) => {
 
 app.get("/generate-question", async (req, res) => {
     try {
-
+        const role = req.query.role || "Frontend React Developer";
         console.log("API KEY:", process.env.GEMINI_API_KEY);
 
         const response = await fetch(
@@ -37,7 +37,7 @@ app.get("/generate-question", async (req, res) => {
                         {
                             parts: [
                                 {
-                                    text: "Generate one React interview question only."
+                                    text: `Generate one ${role} interview question only.`
                                 }
                             ]
                         }
@@ -152,6 +152,7 @@ Can you explain dependency arrays in more detail?
 });
 app.get("/generate-coding-question", async (req, res) => {
     try {
+        const role = req.query.role || "Frontend React Developer";
         const response = await fetch(
             `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${process.env.GEMINI_API_KEY}`,
             {
@@ -166,7 +167,7 @@ app.get("/generate-coding-question", async (req, res) => {
                                 {
 
                                     text: `
-Generate one random frontend coding interview question.
+Generate one random ${role} coding interview question.
 
 Return ONLY valid JSON in this format:
 
