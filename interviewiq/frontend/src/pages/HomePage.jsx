@@ -314,6 +314,20 @@ function HomePage() {
                 </div>
 
             </section >
+            
+            {/* Footer */}
+            <footer className="border-t border-slate-800 py-10 flex flex-col items-center justify-center gap-6 mt-10">
+                <a href="https://www.producthunt.com/products/interviewiq-2?embed=true&utm_source=badge-featured&utm_medium=badge&utm_campaign=badge-interviewiq-2" target="_blank" rel="noopener noreferrer">
+                    <img 
+                        alt="InterviewIQ - Practice real interviews with AI and get instant feedback. | Product Hunt" 
+                        width="250" 
+                        height="54" 
+                        src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=1147877&theme=dark&t=1778869689948" 
+                    />
+                </a>
+                <p className="text-slate-500 text-sm">© 2026 InterviewIQ. Built with AI.</p>
+            </footer>
+
         </div >
     );
 }
