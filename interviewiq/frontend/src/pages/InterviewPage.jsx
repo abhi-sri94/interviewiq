@@ -54,6 +54,7 @@ function InterviewPage() {
     const [followUpQuestion, setFollowUpQuestion] = useState("");
 
     const [codingMode, setCodingMode] = useState(false);
+    const [isFetchingCode, setIsFetchingCode] = useState(false);
 
     const [currentCodingQuestion, setCurrentCodingQuestion] =
         useState(null);
@@ -88,7 +89,7 @@ function InterviewPage() {
 
     const startCodingRound = async () => {
         try {
-
+            setIsFetchingCode(true);
             setCodingMode(true);
 
             const res = await fetch(
@@ -103,6 +104,8 @@ function InterviewPage() {
 
         } catch (error) {
             console.log(error);
+        } finally {
+            setIsFetchingCode(false);
         }
     };
     const startListening = () => {
@@ -193,9 +196,16 @@ function InterviewPage() {
 
                     <button
                         onClick={startCodingRound}
-                        className="bg-yellow-500 px-6 py-3 rounded-2xl"
+                        disabled={isFetchingCode}
+                        className="bg-yellow-500 px-6 py-3 rounded-2xl flex items-center gap-2 disabled:opacity-50"
                     >
-                        Next Coding Question
+                        {isFetchingCode ? (
+                            <>
+                                <span className="animate-spin text-xl">⏳</span> Generating...
+                            </>
+                        ) : (
+                            "Next Coding Question"
+                        )}
                     </button>
 
                 </div>
@@ -487,9 +497,18 @@ function InterviewPage() {
                         </button>
                         <button
                             onClick={startCodingRound}
-                            className="px-6 py-3 flex items-center gap-2 bg-yellow-500 hover:bg-yellow-600 transition rounded-2xl text-lg font-semibold text-slate-900"
+                            disabled={isFetchingCode}
+                            className="px-6 py-3 flex items-center gap-2 bg-yellow-500 hover:bg-yellow-600 transition rounded-2xl text-lg font-semibold text-slate-900 disabled:opacity-50"
                         >
-                            <BiCodeAlt className="text-2xl" /> Start Coding Round
+                            {isFetchingCode ? (
+                                <>
+                                    <span className="animate-spin text-2xl">⏳</span> Generating...
+                                </>
+                            ) : (
+                                <>
+                                    <BiCodeAlt className="text-2xl" /> Start Coding Round
+                                </>
+                            )}
                         </button>
                     </div>
                 </div>
