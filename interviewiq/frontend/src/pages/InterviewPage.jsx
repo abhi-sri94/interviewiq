@@ -5,6 +5,7 @@ import Editor from "@monaco-editor/react";
 import { FiMic, FiMicOff, FiVideo, FiVideoOff } from "react-icons/fi";
 import { FaRobot, FaUserCircle } from "react-icons/fa";
 import { BiCodeAlt } from "react-icons/bi";
+import { Link } from "react-router-dom";
 
 const SpeechRecognition =
     window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -219,9 +220,11 @@ function InterviewPage() {
             {/* Left Panel */}
             <div className="w-full md:w-[320px] bg-slate-900 border-b md:border-b-0 md:border-r border-slate-800 p-6 md:p-8">
 
-                <h1 className="text-3xl font-black text-cyan-400 mb-8 md:mb-12">
-                    InterviewIQ
-                </h1>
+                <Link to="/">
+                    <h1 className="text-3xl font-black text-cyan-400 mb-8 md:mb-12 cursor-pointer">
+                        InterviewIQ
+                    </h1>
+                </Link>
 
                 {/* AI Interviewer */}
                 <div className="bg-slate-800 rounded-3xl p-8 text-center">

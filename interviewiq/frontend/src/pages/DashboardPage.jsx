@@ -1,4 +1,5 @@
 import { motion } from "framer-motion";
+import { Link } from "react-router-dom";
 
 function DashboardPage() {
     return (
@@ -7,9 +8,11 @@ function DashboardPage() {
             {/* Sidebar */}
             <div className="w-full md:w-[260px] bg-slate-900 border-b md:border-b-0 md:border-r border-slate-800 p-6 md:p-8">
 
-                <h1 className="text-3xl font-black text-cyan-400 mb-8 md:mb-14">
-                    InterviewIQ
-                </h1>
+                <Link to="/">
+                    <h1 className="text-3xl font-black text-cyan-400 mb-8 md:mb-14 cursor-pointer">
+                        InterviewIQ
+                    </h1>
+                </Link>
 
                 <div className="space-y-4 md:space-y-5">
 
