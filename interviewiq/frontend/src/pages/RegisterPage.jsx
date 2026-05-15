@@ -1,4 +1,5 @@
 import { motion } from "framer-motion";
+import { Link } from "react-router-dom";
 
 function RegisterPage() {
     return (
@@ -47,9 +48,11 @@ function RegisterPage() {
 
                 <p className="text-slate-400 text-center mt-8">
                     Already have an account?
-                    <span className="text-cyan-400 cursor-pointer ml-2">
-                        Login
-                    </span>
+                    <Link to="/login">
+                        <span className="text-cyan-400 cursor-pointer ml-2">
+                            Login
+                        </span>
+                    </Link>
                 </p>
 
             </motion.div>
