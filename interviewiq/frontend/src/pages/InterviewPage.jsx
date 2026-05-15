@@ -15,6 +15,9 @@ function InterviewPage() {
     const role = location.state?.role || "Frontend React Developer";
 
     const [code, setCode] = useState("");
+    const [timeLeft, setTimeLeft] = useState(300); // 5 minutes
+    const [interviewHistory, setInterviewHistory] = useState([]);
+    const [showReport, setShowReport] = useState(false);
 
     const runCode = async () => {
         if (!code.trim()) {
@@ -57,6 +60,16 @@ function InterviewPage() {
                 alert(`❌ Logic seems incomplete.\n\nConsole Output:\n${output || "No output"}`);
             }
 
+            // Save to history
+            setInterviewHistory(prev => [...prev, {
+                type: "coding",
+                title: currentCodingQuestion.title,
+                question: currentCodingQuestion.question,
+                code: code,
+                output: output || "No output",
+                passed: passed
+            }]);
+
         } catch (error) {
             alert("❌ API Error:\n" + error.message);
         } finally {
@@ -92,6 +105,36 @@ function InterviewPage() {
     const TOTAL_QUESTIONS = 5;
     const progressPercentage = Math.min((questionCount / TOTAL_QUESTIONS) * 100, 100);
 
+    // Timer Logic
+    useEffect(() => {
+        if (showReport || timeLeft <= 0) return;
+
+        const timerId = setInterval(() => {
+            setTimeLeft((prev) => prev - 1);
+        }, 1000);
+
+        return () => clearInterval(timerId);
+    }, [timeLeft, showReport]);
+
+    // Handle Time Up
+    useEffect(() => {
+        if (timeLeft === 0 && !showReport) {
+            alert("⏳ Time's up for this question!");
+            if (codingMode) {
+                startCodingRound();
+            } else {
+                nextQuestion();
+            }
+        }
+    }, [timeLeft, showReport, codingMode]);
+
+    // Format Time Function
+    const formatTime = (seconds) => {
+        const m = Math.floor(seconds / 60);
+        const s = seconds % 60;
+        return `${m}:${s < 10 ? '0' : ''}${s}`;
+    };
+
     const fetchQuestion = async () => {
         try {
             const response = await fetch(`https://interviewiq-backend-6iev.onrender.com/generate-question?role=${encodeURIComponent(role)}`);
@@ -112,6 +155,7 @@ function InterviewPage() {
         setAnswer("");
         setFeedback("");
         setFollowUpQuestion("");
+        setTimeLeft(300);
         await fetchQuestion();
     };
 
@@ -119,6 +163,7 @@ function InterviewPage() {
         try {
             setIsFetchingCode(true);
             setCodingMode(true);
+            setTimeLeft(300);
 
             const res = await fetch(
                 `https://interviewiq-backend-6iev.onrender.com/generate-coding-question?role=${encodeURIComponent(role)}`
@@ -186,13 +231,120 @@ function InterviewPage() {
         setIsListening(false);
     };
 
+    if (showReport) {
+        return (
+            <div className="min-h-screen bg-slate-100 print:bg-white text-slate-900 p-8 md:p-16">
+                <div className="max-w-4xl mx-auto">
+                    
+                    <div className="flex justify-between items-end mb-12 border-b-2 border-slate-300 pb-6 print:border-black">
+                        <div>
+                            <h1 className="text-4xl font-black text-cyan-600 print:text-black">InterviewIQ Report</h1>
+                            <p className="text-xl text-slate-600 mt-2 font-medium">{role} Profile</p>
+                        </div>
+                        <div className="flex gap-4 print:hidden">
+                            <button 
+                                onClick={() => window.print()} 
+                                className="bg-cyan-600 hover:bg-cyan-700 text-white px-6 py-3 rounded-xl font-bold shadow-lg transition"
+                            >
+                                🖨️ Save as PDF
+                            </button>
+                            <Link to="/">
+                                <button className="bg-slate-800 hover:bg-slate-900 text-white px-6 py-3 rounded-xl font-bold transition">
+                                    Exit
+                                </button>
+                            </Link>
+                        </div>
+                    </div>
+
+                    {interviewHistory.length === 0 ? (
+                        <p className="text-center text-slate-500 text-xl">No interview history recorded.</p>
+                    ) : (
+                        <div className="space-y-12">
+                            {interviewHistory.map((item, index) => (
+                                <div key={index} className="bg-white p-8 rounded-2xl shadow-sm border border-slate-200 print:shadow-none print:border-black print:border-b-4 print:mb-12 page-break-inside-avoid">
+                                    <div className="flex items-center gap-3 mb-6">
+                                        <span className="bg-cyan-100 text-cyan-800 font-bold px-3 py-1 rounded-full text-sm">
+                                            Q{index + 1}
+                                        </span>
+                                        <span className="bg-slate-100 text-slate-600 font-bold px-3 py-1 rounded-full text-sm uppercase">
+                                            {item.type} ROUND
+                                        </span>
+                                    </div>
+
+                                    {item.type === "verbal" ? (
+                                        <>
+                                            <h2 className="text-2xl font-bold text-slate-800 mb-4">{item.question}</h2>
+                                            
+                                            <div className="bg-slate-50 p-4 rounded-xl mb-6 border border-slate-100">
+                                                <h3 className="font-bold text-slate-700 mb-2">Candidate Response:</h3>
+                                                <p className="text-slate-600 italic">"{item.answer || "No response provided."}"</p>
+                                            </div>
+
+                                            <div className="grid grid-cols-3 gap-4 mb-6">
+                                                <div className="bg-green-50 p-3 rounded-lg text-center border border-green-100">
+                                                    <p className="text-xs text-green-600 font-bold uppercase tracking-wider">Technical</p>
+                                                    <p className="text-2xl font-black text-green-700">{item.scores.technical}%</p>
+                                                </div>
+                                                <div className="bg-blue-50 p-3 rounded-lg text-center border border-blue-100">
+                                                    <p className="text-xs text-blue-600 font-bold uppercase tracking-wider">Communication</p>
+                                                    <p className="text-2xl font-black text-blue-700">{item.scores.communication}%</p>
+                                                </div>
+                                                <div className="bg-purple-50 p-3 rounded-lg text-center border border-purple-100">
+                                                    <p className="text-xs text-purple-600 font-bold uppercase tracking-wider">Confidence</p>
+                                                    <p className="text-2xl font-black text-purple-700">{item.scores.confidence}%</p>
+                                                </div>
+                                            </div>
+
+                                            <div>
+                                                <h3 className="font-bold text-slate-700 mb-2">AI Feedback:</h3>
+                                                <p className="text-slate-600 whitespace-pre-line text-sm">{item.feedback}</p>
+                                            </div>
+                                        </>
+                                    ) : (
+                                        <>
+                                            <h2 className="text-2xl font-bold text-slate-800 mb-2">{item.title}</h2>
+                                            <p className="text-slate-600 mb-6">{item.question}</p>
+                                            
+                                            <div className="bg-slate-900 rounded-xl overflow-hidden mb-6 print:bg-slate-100 print:text-black">
+                                                <div className="bg-slate-800 px-4 py-2 flex justify-between items-center border-b border-slate-700 print:bg-slate-200">
+                                                    <span className="text-slate-400 text-xs font-mono print:text-slate-600">candidate_solution.js</span>
+                                                    <span className={`text-xs font-bold px-2 py-1 rounded ${item.passed ? 'bg-green-500/20 text-green-400 print:text-green-700' : 'bg-red-500/20 text-red-400 print:text-red-700'}`}>
+                                                        {item.passed ? "PASSED" : "INCOMPLETE"}
+                                                    </span>
+                                                </div>
+                                                <pre className="p-4 text-slate-300 font-mono text-sm overflow-x-auto print:text-slate-800">
+                                                    <code>{item.code}</code>
+                                                </pre>
+                                            </div>
+
+                                            <div>
+                                                <h3 className="font-bold text-slate-700 mb-2">Console Output:</h3>
+                                                <pre className="bg-slate-100 p-4 rounded-xl text-slate-700 font-mono text-sm border border-slate-200">
+                                                    {item.output}
+                                                </pre>
+                                            </div>
+                                        </>
+                                    )}
+                                </div>
+                            ))}
+                        </div>
+                    )}
+                </div>
+            </div>
+        );
+    }
+
     if (codingMode && currentCodingQuestion) {
         return (
             <div className="min-h-screen bg-[#020617] text-white p-6 md:p-10">
-
-                <h1 className="text-3xl md:text-4xl font-bold mb-6">
-                    {currentCodingQuestion.title}
-                </h1>
+                <div className="flex items-center justify-between mb-6">
+                    <h1 className="text-3xl md:text-4xl font-bold">
+                        {currentCodingQuestion.title}
+                    </h1>
+                    <div className={`px-4 py-2 rounded-full font-mono text-2xl font-bold border ${timeLeft <= 60 ? 'bg-red-500/20 text-red-400 border-red-500 animate-pulse' : 'bg-slate-800 text-cyan-400 border-slate-700'}`}>
+                        ⏱ {formatTime(timeLeft)}
+                    </div>
+                </div>
 
                 <p className="text-slate-300 mb-6">
                     {currentCodingQuestion.question}
@@ -230,7 +382,7 @@ function InterviewPage() {
                     <button
                         onClick={startCodingRound}
                         disabled={isFetchingCode}
-                        className="bg-yellow-500 px-6 py-3 rounded-2xl flex items-center justify-center gap-2 disabled:opacity-50 w-full md:w-auto"
+                        className="bg-yellow-500 px-6 py-3 rounded-2xl flex items-center justify-center gap-2 text-slate-900 disabled:opacity-50 w-full md:w-auto"
                     >
                         {isFetchingCode ? (
                             <>
@@ -239,6 +391,13 @@ function InterviewPage() {
                         ) : (
                             "Next Coding Question"
                         )}
+                    </button>
+
+                    <button
+                        onClick={() => { setCodingMode(false); setShowReport(true); }}
+                        className="px-6 py-3 border border-purple-500 rounded-2xl hover:bg-purple-500/20 transition text-purple-400 font-semibold w-full md:w-auto"
+                    >
+                        End & View Report
                     </button>
 
                 </div>
@@ -300,12 +459,17 @@ function InterviewPage() {
             <div className="flex-1 flex flex-col">
 
                 {/* Top */}
-                <div className="border-b border-slate-800 p-6 md:p-8 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+                <div className="border-b border-slate-800 p-6 md:p-8 flex flex-col md:flex-row items-start md:items-center justify-between gap-6 print:hidden">
 
                     <div>
-                        <h1 className="text-3xl md:text-4xl font-black">
-                            Live Interview
-                        </h1>
+                        <div className="flex items-center gap-4">
+                            <h1 className="text-3xl md:text-4xl font-black">
+                                Live Interview
+                            </h1>
+                            <div className={`px-4 py-1 rounded-full font-mono text-xl font-bold border ${timeLeft <= 60 ? 'bg-red-500/20 text-red-400 border-red-500 animate-pulse' : 'bg-slate-800 text-cyan-400 border-slate-700'}`}>
+                                ⏱ {formatTime(timeLeft)}
+                            </div>
+                        </div>
 
                         <p className="text-slate-400 mt-2">
                             Answer naturally and confidently.
@@ -497,6 +661,19 @@ function InterviewPage() {
                                         }
                                     }
 
+                                    // Save to history
+                                    setInterviewHistory(prev => [...prev, {
+                                        type: "verbal",
+                                        question: question,
+                                        answer: answer,
+                                        feedback: aiText,
+                                        scores: {
+                                            technical: technicalMatch ? technicalMatch[1] : 0,
+                                            communication: communicationMatch ? communicationMatch[1] : 0,
+                                            confidence: confidenceMatch ? confidenceMatch[1] : 0
+                                        }
+                                    }]);
+
                                 } catch (error) {
                                     console.log(error);
 
@@ -529,6 +706,12 @@ function InterviewPage() {
                             className="w-full md:w-auto justify-center px-6 py-3 border border-cyan-400 rounded-xl hover:bg-cyan-500/20 transition"
                         >
                             Next Question
+                        </button>
+                        <button
+                            onClick={() => setShowReport(true)}
+                            className="w-full md:w-auto justify-center px-6 py-3 border border-purple-500 rounded-xl hover:bg-purple-500/20 transition text-purple-400 font-semibold"
+                        >
+                            End & View Report
                         </button>
                         <button
                             onClick={startCodingRound}
