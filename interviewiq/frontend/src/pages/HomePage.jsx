@@ -55,7 +55,7 @@ function HomePage() {
                 >
                     <div className="w-full md:w-auto bg-slate-900/80 border border-slate-700 rounded-2xl px-6 py-3 flex items-center justify-between backdrop-blur-md">
                         <span className="text-slate-400 mr-4 font-semibold">Select Role:</span>
-                        <select 
+                        <select
                             value={selectedRole}
                             onChange={(e) => setSelectedRole(e.target.value)}
                             className="bg-transparent text-cyan-400 outline-none font-bold cursor-pointer text-lg"
@@ -75,12 +75,12 @@ function HomePage() {
                             </button>
                         </Link>
 
-                    <button 
-                        onClick={() => document.getElementById('how-it-works')?.scrollIntoView({ behavior: 'smooth' })}
-                        className="w-full md:w-auto border border-slate-600 hover:border-cyan-400 hover:text-cyan-400 transition-all duration-300 px-8 py-4 rounded-2xl text-lg"
-                    >
-                        Watch Demo
-                    </button>
+                        <button
+                            onClick={() => document.getElementById('how-it-works')?.scrollIntoView({ behavior: 'smooth' })}
+                            className="w-full md:w-auto border border-slate-600 hover:border-cyan-400 hover:text-cyan-400 transition-all duration-300 px-8 py-4 rounded-2xl text-lg"
+                        >
+                            Watch Demo
+                        </button>
                     </div>
                 </motion.div>
 
@@ -298,7 +298,7 @@ function HomePage() {
                                     </button>
                                 </Link>
 
-                                <button 
+                                <button
                                     onClick={() => document.getElementById('how-it-works')?.scrollIntoView({ behavior: 'smooth' })}
                                     className="w-full md:w-auto border border-slate-500 hover:border-cyan-400 hover:text-cyan-400 transition-all duration-300 px-10 py-4 md:py-5 rounded-2xl text-lg font-bold"
                                 >
@@ -314,18 +314,18 @@ function HomePage() {
                 </div>
 
             </section >
-            
+
             {/* Footer */}
             <footer className="border-t border-slate-800 py-10 flex flex-col items-center justify-center gap-6 mt-10">
                 <a href="https://www.producthunt.com/products/interviewiq-2?embed=true&utm_source=badge-featured&utm_medium=badge&utm_campaign=badge-interviewiq-2" target="_blank" rel="noopener noreferrer">
-                    <img 
-                        alt="InterviewIQ - Practice real interviews with AI and get instant feedback. | Product Hunt" 
-                        width="250" 
-                        height="54" 
-                        src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=1147877&theme=dark&t=1778869689948" 
+                    <img
+                        alt="InterviewIQ - Practice real interviews with AI and get instant feedback. | Product Hunt"
+                        width="250"
+                        height="54"
+                        src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=1147877&theme=dark&t=1778869689948"
                     />
                 </a>
-                <p className="text-slate-500 text-sm">© 2026 InterviewIQ. Built with AI.</p>
+                <p className="text-slate-500 text-sm">© 2026 InterviewIQ. Built by Abhishek Srivastava.</p>
             </footer>
 
         </div >
