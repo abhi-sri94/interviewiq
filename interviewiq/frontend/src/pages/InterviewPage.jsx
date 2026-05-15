@@ -14,27 +14,51 @@ function InterviewPage() {
 
     const [code, setCode] = useState("");
 
-    const runCode = () => {
+    const runCode = async () => {
+        if (!code.trim()) {
+            alert("❌ Please write some code first.");
+            return;
+        }
+
         try {
+            setIsRunningCode(true);
 
-            eval(code);
+            // Secure remote code execution via Piston API
+            const response = await fetch("https://emkc.org/api/v2/piston/execute", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    language: "javascript",
+                    version: "18.15.0",
+                    files: [{ content: code }],
+                }),
+            });
 
-            const keywords =
-                currentCodingQuestion.expectedKeywords || [];
+            const data = await response.json();
 
-            const passed = keywords.every((word) =>
-                code.includes(word)
-            );
+            if (data.run.code !== 0) {
+                alert("❌ Execution Error:\n" + data.run.stderr);
+                return;
+            }
+
+            const output = data.run.stdout;
+
+            // Simple Keyword Validation
+            const keywords = currentCodingQuestion.expectedKeywords || [];
+            const passed = keywords.every((word) => code.includes(word));
 
             if (passed) {
-                alert("✅ Correct Solution!");
+                alert(`✅ Correct Solution!\n\nConsole Output:\n${output || "No output"}`);
             } else {
-                alert("❌ Logic seems incomplete");
+                alert(`❌ Logic seems incomplete.\n\nConsole Output:\n${output || "No output"}`);
             }
 
         } catch (error) {
-
-            alert("❌ Error:\n" + error.message);
+            alert("❌ API Error:\n" + error.message);
+        } finally {
+            setIsRunningCode(false);
         }
     };
 
@@ -56,6 +80,7 @@ function InterviewPage() {
 
     const [codingMode, setCodingMode] = useState(false);
     const [isFetchingCode, setIsFetchingCode] = useState(false);
+    const [isRunningCode, setIsRunningCode] = useState(false);
 
     const [currentCodingQuestion, setCurrentCodingQuestion] =
         useState(null);
@@ -190,9 +215,14 @@ function InterviewPage() {
 
                     <button
                         onClick={runCode}
-                        className="bg-green-500 px-6 py-3 rounded-2xl w-full md:w-auto"
+                        disabled={isRunningCode}
+                        className="bg-green-500 px-6 py-3 rounded-2xl w-full md:w-auto flex items-center justify-center gap-2 disabled:opacity-50"
                     >
-                        Run Code
+                        {isRunningCode ? (
+                            <><span className="animate-spin text-xl">⏳</span> Running...</>
+                        ) : (
+                            "Run Code"
+                        )}
                     </button>
 
                     <button
