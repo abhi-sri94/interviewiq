@@ -50,26 +50,26 @@ function HomePage() {
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.6, duration: 0.8 }}
-                    className="flex gap-5 mt-10 relative z-50"
+                    className="flex flex-col md:flex-row gap-4 md:gap-5 mt-10 relative z-50 w-full md:w-auto"
                 >
-                    <Link to="/interview">
-                        <button className="bg-cyan-500 hover:bg-cyan-600 transition px-10 py-4 rounded-2xl text-lg font-semibold cursor-pointer">
+                    <Link to="/interview" className="w-full md:w-auto">
+                        <button className="w-full md:w-auto bg-cyan-500 hover:bg-cyan-600 transition px-10 py-4 rounded-2xl text-lg font-semibold cursor-pointer">
                             Start Interview
                         </button>
                     </Link>
 
-                    <button className="border border-slate-600 hover:border-cyan-400 hover:text-cyan-400 transition-all duration-300 px-8 py-4 rounded-2xl text-lg">
+                    <button className="w-full md:w-auto border border-slate-600 hover:border-cyan-400 hover:text-cyan-400 transition-all duration-300 px-8 py-4 rounded-2xl text-lg">
                         Watch Demo
                     </button>
                 </motion.div>
 
                 {/* Stats */}
-                <div className="grid grid-cols-3 gap-8 mt-24 w-full max-w-4xl">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 mt-16 md:mt-24 w-full max-w-4xl relative z-40">
 
                     <motion.div
                         whileHover={{ scale: 1.05 }}
                         transition={{ type: "spring", stiffness: 250 }}
-                        className="bg-slate-900/70 border border-slate-800 rounded-3xl p-8 backdrop-blur-md"
+                        className="bg-slate-900/70 border border-slate-800 rounded-3xl p-6 md:p-8 backdrop-blur-md"
                     >                        <h2 className="text-2xl font-bold text-cyan-400">AI Powered</h2>
                         <p className="text-slate-400 mt-2">Smart Interview Engine</p>
                     </motion.div>
@@ -77,7 +77,7 @@ function HomePage() {
                     <motion.div
                         whileHover={{ scale: 1.05 }}
                         transition={{ type: "spring", stiffness: 250 }}
-                        className="bg-slate-900/70 border border-slate-800 rounded-3xl p-8 backdrop-blur-md"
+                        className="bg-slate-900/70 border border-slate-800 rounded-3xl p-6 md:p-8 backdrop-blur-md"
                     >                    <h2 className="text-2xl font-bold text-cyan-400">Instant</h2>
                         <p className="text-slate-400 mt-2">Performance Feedback</p>
                     </motion.div>
@@ -85,7 +85,7 @@ function HomePage() {
                     <motion.div
                         whileHover={{ scale: 1.05 }}
                         transition={{ type: "spring", stiffness: 250 }}
-                        className="bg-slate-900/70 border border-slate-800 rounded-3xl p-8 backdrop-blur-md"
+                        className="bg-slate-900/70 border border-slate-800 rounded-3xl p-6 md:p-8 backdrop-blur-md"
                     >                    <h2 className="text-2xl font-bold text-cyan-400">Multi Role</h2>
                         <p className="text-slate-400 mt-2">Frontend, Backend & HR</p>
                     </motion.div>
@@ -94,11 +94,12 @@ function HomePage() {
 
             </section >
             {/* Features Section */}
-            < section className="px-8 py-28 max-w-7xl mx-auto" >
+            < section className="px-6 md:px-8 py-20 md:py-28 max-w-7xl mx-auto" >
 
-                <div className="text-center mb-20">
-                    <h2 className="text-5xl font-bold">
+                <div className="text-center mb-16 md:mb-20">
+                    <h2 className="text-4xl md:text-5xl font-bold leading-tight">
                         Everything You Need To
+                        <br className="md:hidden" />
                         <span className="text-cyan-400"> Ace Interviews</span>
                     </h2>
 
@@ -168,12 +169,12 @@ function HomePage() {
 
             </section >
             {/* How It Works */}
-            < section className="px-8 py-28 bg-slate-950/40" >
+            < section className="px-6 md:px-8 py-20 md:py-28 bg-slate-950/40" >
 
                 <div className="max-w-7xl mx-auto">
 
-                    <div className="text-center mb-20">
-                        <h2 className="text-5xl font-bold">
+                    <div className="text-center mb-16 md:mb-20">
+                        <h2 className="text-4xl md:text-5xl font-bold">
                             How
                             <span className="text-cyan-400"> InterviewIQ </span>
                             Works
@@ -246,19 +247,20 @@ function HomePage() {
 
             </section >
             {/* CTA Section */}
-            < section className="px-8 py-32" >
+            < section className="px-6 md:px-8 py-20 md:py-32" >
 
                 <div className="max-w-5xl mx-auto">
 
-                    <div className="relative overflow-hidden bg-gradient-to-r from-cyan-500/20 to-blue-500/20 border border-cyan-500/20 rounded-[40px] p-16 text-center backdrop-blur-xl">
+                    <div className="relative overflow-hidden bg-gradient-to-r from-cyan-500/20 to-blue-500/20 border border-cyan-500/20 rounded-3xl md:rounded-[40px] p-8 md:p-16 text-center backdrop-blur-xl">
 
                         {/* Glow */}
                         <div className="absolute inset-0 bg-cyan-500/10 blur-3xl"></div>
 
                         <div className="relative z-10">
 
-                            <h2 className="text-5xl md:text-6xl font-black leading-tight">
+                            <h2 className="text-4xl md:text-6xl font-black leading-tight">
                                 Ready To Crack Your
+                                <br className="md:hidden" />
                                 <span className="text-cyan-400"> Dream Job?</span>
                             </h2>
 
@@ -267,13 +269,13 @@ function HomePage() {
                                 instant feedback, and role-specific preparation.
                             </p>
 
-                            <div className="flex justify-center gap-6 mt-12">
+                            <div className="flex flex-col md:flex-row justify-center gap-4 md:gap-6 mt-10 md:mt-12">
 
-                                <button className="bg-cyan-500 hover:bg-cyan-600 transition-all duration-300 px-10 py-5 rounded-2xl text-lg font-bold shadow-lg shadow-cyan-500/30">
+                                <button className="w-full md:w-auto bg-cyan-500 hover:bg-cyan-600 transition-all duration-300 px-10 py-4 md:py-5 rounded-2xl text-lg font-bold shadow-lg shadow-cyan-500/30">
                                     Start Free
                                 </button>
 
-                                <button className="border border-slate-500 hover:border-cyan-400 hover:text-cyan-400 transition-all duration-300 px-10 py-5 rounded-2xl text-lg font-bold">
+                                <button className="w-full md:w-auto border border-slate-500 hover:border-cyan-400 hover:text-cyan-400 transition-all duration-300 px-10 py-4 md:py-5 rounded-2xl text-lg font-bold">
                                     Learn More
                                 </button>
 

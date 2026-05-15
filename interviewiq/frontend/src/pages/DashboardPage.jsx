@@ -2,16 +2,16 @@ import { motion } from "framer-motion";
 
 function DashboardPage() {
     return (
-        <div className="min-h-screen bg-[#020617] text-white flex">
+        <div className="min-h-screen bg-[#020617] text-white flex flex-col md:flex-row">
 
             {/* Sidebar */}
-            <div className="w-[260px] bg-slate-900 border-r border-slate-800 p-8">
+            <div className="w-full md:w-[260px] bg-slate-900 border-b md:border-b-0 md:border-r border-slate-800 p-6 md:p-8">
 
-                <h1 className="text-3xl font-black text-cyan-400 mb-14">
+                <h1 className="text-3xl font-black text-cyan-400 mb-8 md:mb-14">
                     InterviewIQ
                 </h1>
 
-                <div className="space-y-5">
+                <div className="space-y-4 md:space-y-5">
 
                     <button className="w-full bg-cyan-500 text-white py-4 rounded-2xl font-semibold">
                         Dashboard
@@ -34,7 +34,7 @@ function DashboardPage() {
             </div>
 
             {/* Main Content */}
-            <div className="flex-1 p-12">
+            <div className="flex-1 p-6 md:p-12">
 
                 <motion.div
                     initial={{ opacity: 0, y: 25 }}
@@ -42,11 +42,11 @@ function DashboardPage() {
                     transition={{ duration: 0.7 }}
                 >
 
-                    <h1 className="text-5xl font-black mb-4">
+                    <h1 className="text-3xl md:text-5xl font-black mb-4">
                         Welcome Back 👋
                     </h1>
 
-                    <p className="text-slate-400 text-lg mb-12">
+                    <p className="text-slate-400 text-base md:text-lg mb-8 md:mb-12">
                         Ready for your next AI interview session?
                     </p>
 
@@ -86,15 +86,15 @@ function DashboardPage() {
                     </div>
 
                     {/* Recent Interviews */}
-                    <div className="mt-16">
+                    <div className="mt-12 md:mt-16">
 
-                        <h2 className="text-3xl font-bold mb-8">
+                        <h2 className="text-2xl md:text-3xl font-bold mb-6 md:mb-8">
                             Recent Interviews
                         </h2>
 
-                        <div className="space-y-5">
+                        <div className="space-y-4 md:space-y-5">
 
-                            <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6 flex items-center justify-between">
+                            <div className="bg-slate-900 border border-slate-800 rounded-2xl p-5 md:p-6 flex items-center justify-between">
                                 <div>
                                     <h3 className="text-xl font-semibold">
                                         Frontend Developer
