@@ -15,7 +15,7 @@ function InterviewPage() {
     const role = location.state?.role || "Frontend React Developer";
 
     const [code, setCode] = useState("");
-    const [timeLeft, setTimeLeft] = useState(300); // 5 minutes
+    const [timeLeft, setTimeLeft] = useState(600); // 10 minutes
     const [interviewHistory, setInterviewHistory] = useState([]);
     const [showReport, setShowReport] = useState(false);
 
@@ -155,7 +155,7 @@ function InterviewPage() {
         setAnswer("");
         setFeedback("");
         setFollowUpQuestion("");
-        setTimeLeft(300);
+        setTimeLeft(600);
         await fetchQuestion();
     };
 
@@ -163,7 +163,7 @@ function InterviewPage() {
         try {
             setIsFetchingCode(true);
             setCodingMode(true);
-            setTimeLeft(300);
+            setTimeLeft(600);
 
             const res = await fetch(
                 `https://interviewiq-backend-6iev.onrender.com/generate-coding-question?role=${encodeURIComponent(role)}`
@@ -490,7 +490,7 @@ function InterviewPage() {
                                         setFollowUpQuestion("");
                                         setAnswer("");
                                         setFeedback("");
-                                        setTimeLeft(300);
+                                        setTimeLeft(600);
                                     }}
                                     className="mt-4 px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white text-sm font-bold rounded-xl transition shadow-lg"
                                 >
