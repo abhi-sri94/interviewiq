@@ -160,9 +160,9 @@ function InterviewPage() {
 
     if (codingMode && currentCodingQuestion) {
         return (
-            <div className="min-h-screen bg-[#020617] text-white p-10">
+            <div className="min-h-screen bg-[#020617] text-white p-6 md:p-10">
 
-                <h1 className="text-4xl font-bold mb-6">
+                <h1 className="text-3xl md:text-4xl font-bold mb-6">
                     {currentCodingQuestion.title}
                 </h1>
 
@@ -185,11 +185,11 @@ function InterviewPage() {
                     />
                 </div>
 
-                <div className="flex gap-4 mt-6">
+                <div className="flex flex-col md:flex-row gap-4 mt-6">
 
                     <button
                         onClick={runCode}
-                        className="bg-green-500 px-6 py-3 rounded-2xl"
+                        className="bg-green-500 px-6 py-3 rounded-2xl w-full md:w-auto"
                     >
                         Run Code
                     </button>
@@ -197,7 +197,7 @@ function InterviewPage() {
                     <button
                         onClick={startCodingRound}
                         disabled={isFetchingCode}
-                        className="bg-yellow-500 px-6 py-3 rounded-2xl flex items-center gap-2 disabled:opacity-50"
+                        className="bg-yellow-500 px-6 py-3 rounded-2xl flex items-center justify-center gap-2 disabled:opacity-50 w-full md:w-auto"
                     >
                         {isFetchingCode ? (
                             <>
@@ -214,12 +214,12 @@ function InterviewPage() {
         );
     }
     return (
-        <div className="min-h-screen bg-[#020617] text-white flex">
+        <div className="min-h-screen bg-[#020617] text-white flex flex-col md:flex-row">
 
             {/* Left Panel */}
-            <div className="w-[320px] bg-slate-900 border-r border-slate-800 p-8">
+            <div className="w-full md:w-[320px] bg-slate-900 border-b md:border-b-0 md:border-r border-slate-800 p-6 md:p-8">
 
-                <h1 className="text-3xl font-black text-cyan-400 mb-12">
+                <h1 className="text-3xl font-black text-cyan-400 mb-8 md:mb-12">
                     InterviewIQ
                 </h1>
 
@@ -265,10 +265,10 @@ function InterviewPage() {
             <div className="flex-1 flex flex-col">
 
                 {/* Top */}
-                <div className="border-b border-slate-800 p-8 flex items-center justify-between">
+                <div className="border-b border-slate-800 p-6 md:p-8 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
 
                     <div>
-                        <h1 className="text-4xl font-black">
+                        <h1 className="text-3xl md:text-4xl font-black">
                             Live Interview
                         </h1>
 
@@ -288,13 +288,13 @@ function InterviewPage() {
                         )}
                     </div>
 
-                    <div className="flex gap-4">
+                    <div className="flex gap-4 w-full md:w-auto">
 
-                        <button className="bg-slate-800 px-6 py-3 rounded-2xl flex items-center gap-2 hover:bg-slate-700 transition">
+                        <button className="flex-1 md:flex-none justify-center bg-slate-800 px-6 py-3 rounded-2xl flex items-center gap-2 hover:bg-slate-700 transition">
                             <FiMic className="text-xl" /> Mic On
                         </button>
 
-                        <button className="bg-slate-800 px-6 py-3 rounded-2xl flex items-center gap-2 hover:bg-slate-700 transition">
+                        <button className="flex-1 md:flex-none justify-center bg-slate-800 px-6 py-3 rounded-2xl flex items-center gap-2 hover:bg-slate-700 transition">
                             <FiVideo className="text-xl" /> Camera On
                         </button>
 
@@ -303,20 +303,20 @@ function InterviewPage() {
                 </div>
 
                 {/* Question Area */}
-                <div className="flex-1 p-12">
+                <div className="flex-1 p-4 md:p-12">
 
                     <motion.div
                         initial={{ opacity: 0, y: 25 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.7 }}
-                        className="bg-slate-900 border border-slate-800 rounded-[40px] p-12"
+                        className="bg-slate-900 border border-slate-800 rounded-3xl md:rounded-[40px] p-6 md:p-12"
                     >
 
                         <div className="text-cyan-400 text-sm font-semibold mb-4">
                             CURRENT QUESTION
                         </div>
 
-                        <h2 className="text-4xl font-bold leading-relaxed">
+                        <h2 className="text-2xl md:text-4xl font-bold leading-relaxed">
                             <TypeAnimation
                                 key={question}
                                 sequence={[question]}
@@ -410,7 +410,7 @@ function InterviewPage() {
                     </motion.div>
 
                     {/* Controls */}
-                    <div className="flex gap-5 mt-10">
+                    <div className="flex flex-col md:flex-row gap-5 mt-10">
 
                         <button
                             onClick={async () => {
@@ -469,14 +469,14 @@ function InterviewPage() {
                                     setLoading(false);
                                 }
                             }}
-                            className="bg-cyan-500 hover:bg-cyan-600 transition px-8 py-4 rounded-2xl text-lg font-semibold"
+                            className="w-full md:w-auto justify-center bg-cyan-500 hover:bg-cyan-600 transition px-8 py-4 rounded-2xl text-lg font-semibold"
                         >
                             Submit Answer
                         </button>
 
                         <button
                             onClick={isListening ? stopListening : startListening}
-                            className={`px-6 py-3 flex items-center gap-2 transition rounded-2xl text-lg font-semibold ${
+                            className={`w-full md:w-auto justify-center px-6 py-3 flex items-center gap-2 transition rounded-2xl text-lg font-semibold ${
                                 isListening 
                                     ? "bg-red-500 hover:bg-red-600 shadow-[0_0_20px_rgba(239,68,68,0.5)] animate-pulse" 
                                     : "bg-purple-600 hover:bg-purple-700"
@@ -491,14 +491,14 @@ function InterviewPage() {
                                 console.log("BUTTON CLICKED");
                                 nextQuestion();
                             }}
-                            className="px-6 py-3 border border-cyan-400 rounded-xl hover:bg-cyan-500/20 transition"
+                            className="w-full md:w-auto justify-center px-6 py-3 border border-cyan-400 rounded-xl hover:bg-cyan-500/20 transition"
                         >
                             Next Question
                         </button>
                         <button
                             onClick={startCodingRound}
                             disabled={isFetchingCode}
-                            className="px-6 py-3 flex items-center gap-2 bg-yellow-500 hover:bg-yellow-600 transition rounded-2xl text-lg font-semibold text-slate-900 disabled:opacity-50"
+                            className="w-full md:w-auto justify-center px-6 py-3 flex items-center gap-2 bg-yellow-500 hover:bg-yellow-600 transition rounded-2xl text-lg font-semibold text-slate-900 disabled:opacity-50"
                         >
                             {isFetchingCode ? (
                                 <>
