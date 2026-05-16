@@ -78,9 +78,12 @@ function InterviewPage() {
     };
 
     // baaki functions...
-    const recognitionRef = useRef(null);
+    const hasFetched = useRef(false);
     useEffect(() => {
-        fetchQuestion();
+        if (!hasFetched.current) {
+            fetchQuestion();
+            hasFetched.current = true;
+        }
     }, []);
 
     const [question, setQuestion] = useState("");
@@ -99,7 +102,7 @@ function InterviewPage() {
 
     const [currentCodingQuestion, setCurrentCodingQuestion] =
         useState(null);
-    
+
     // Progress Tracking
     const [questionCount, setQuestionCount] = useState(1);
     const TOTAL_QUESTIONS = 5;
@@ -137,7 +140,7 @@ function InterviewPage() {
 
     const fetchQuestion = async () => {
         try {
-            const response = await fetch(`https://interviewiq-backend-6iev.onrender.com/generate-question?role=${encodeURIComponent(role)}`);
+            const response = await fetch(`http://localhost:8000/generate-question?role=${encodeURIComponent(role)}`);
 
             const data = await response.json();
 
@@ -166,7 +169,7 @@ function InterviewPage() {
             setTimeLeft(600);
 
             const res = await fetch(
-                `https://interviewiq-backend-6iev.onrender.com/generate-coding-question?role=${encodeURIComponent(role)}`
+                `http://localhost:8000/generate-coding-question?role=${encodeURIComponent(role)}`
             );
 
             const data = await res.json();
@@ -235,15 +238,15 @@ function InterviewPage() {
         return (
             <div className="min-h-screen bg-slate-100 print:bg-white text-slate-900 p-8 md:p-16">
                 <div className="max-w-4xl mx-auto">
-                    
+
                     <div className="flex justify-between items-end mb-12 border-b-2 border-slate-300 pb-6 print:border-black">
                         <div>
                             <h1 className="text-4xl font-black text-cyan-600 print:text-black">InterviewIQ Report</h1>
                             <p className="text-xl text-slate-600 mt-2 font-medium">{role} Profile</p>
                         </div>
                         <div className="flex gap-4 print:hidden">
-                            <button 
-                                onClick={() => window.print()} 
+                            <button
+                                onClick={() => window.print()}
                                 className="bg-cyan-600 hover:bg-cyan-700 text-white px-6 py-3 rounded-xl font-bold shadow-lg transition"
                             >
                                 🖨️ Save as PDF
@@ -274,7 +277,7 @@ function InterviewPage() {
                                     {item.type === "verbal" ? (
                                         <>
                                             <h2 className="text-2xl font-bold text-slate-800 mb-4">{item.question}</h2>
-                                            
+
                                             <div className="bg-slate-50 p-4 rounded-xl mb-6 border border-slate-100">
                                                 <h3 className="font-bold text-slate-700 mb-2">Candidate Response:</h3>
                                                 <p className="text-slate-600 italic">"{item.answer || "No response provided."}"</p>
@@ -304,7 +307,7 @@ function InterviewPage() {
                                         <>
                                             <h2 className="text-2xl font-bold text-slate-800 mb-2">{item.title}</h2>
                                             <p className="text-slate-600 mb-6">{item.question}</p>
-                                            
+
                                             <div className="bg-slate-900 rounded-xl overflow-hidden mb-6 print:bg-slate-100 print:text-black">
                                                 <div className="bg-slate-800 px-4 py-2 flex justify-between items-center border-b border-slate-700 print:bg-slate-200">
                                                     <span className="text-slate-400 text-xs font-mono print:text-slate-600">candidate_solution.js</span>
@@ -405,86 +408,25 @@ function InterviewPage() {
             </div>
         );
     }
+
     return (
-        <div className="min-h-screen bg-[#020617] text-white flex flex-col md:flex-row">
-
-            {/* Left Panel */}
-            <div className="w-full md:w-[320px] bg-slate-900 border-b md:border-b-0 md:border-r border-slate-800 p-6 md:p-8">
-
-                <Link to="/">
-                    <h1 className="text-3xl font-black text-cyan-400 mb-8 md:mb-12 cursor-pointer">
-                        InterviewIQ
-                    </h1>
-                </Link>
-
-                {/* AI Interviewer */}
-                <div className="bg-slate-800 rounded-3xl p-8 text-center">
-
-                    <div className={`w-28 h-28 rounded-full bg-cyan-500 mx-auto flex items-center justify-center text-5xl transition-all duration-300 ${loading ? "shadow-[0_0_30px_rgba(6,182,212,0.6)] animate-pulse" : ""}`}>
-                        <FaRobot className="text-white text-5xl" />
-                    </div>
-
-                    <h2 className="text-2xl font-bold mt-6">
-                        AI Interviewer
-                    </h2>
-
-                    <p className="text-slate-400 mt-3">
-                        {role} Interview
-                    </p>
-
-                </div>
-
-                {/* Progress */}
-                <div className="mt-10">
-
-                    <div className="flex justify-between mb-3">
-                        <span className="text-slate-400">
-                            Interview Progress
-                        </span>
-
-                        <span className="text-cyan-400">
-                            {progressPercentage}%
-                        </span>
-                    </div>
-
-                    <div className="w-full h-3 bg-slate-800 rounded-full overflow-hidden">
-                        <div className="h-full bg-cyan-500 transition-all duration-500" style={{ width: `${progressPercentage}%` }}></div>
-                    </div>
-
-                </div>
-
-            </div>
-
-            {/* Main Interview Area */}
-            <div className="flex-1 flex flex-col">
-
-                {/* Top */}
+        <div className="min-h-screen bg-[#020617] text-white flex flex-col">
+            <div className="flex-1 flex flex-col p-4 md:p-8">
+                {/* Top Navigation / Header */}
                 <div className="border-b border-slate-800 p-6 md:p-8 flex flex-col md:flex-row items-start md:items-center justify-between gap-6 print:hidden">
-
                     <div>
                         <div className="flex items-center gap-4">
-                            <h1 className="text-3xl md:text-4xl font-black">
-                                Live Interview
-                            </h1>
+                            <h1 className="text-3xl md:text-4xl font-black text-white">Live Interview</h1>
                             <div className={`px-4 py-1 rounded-full font-mono text-xl font-bold border ${timeLeft <= 60 ? 'bg-red-500/20 text-red-400 border-red-500 animate-pulse' : 'bg-slate-800 text-cyan-400 border-slate-700'}`}>
                                 ⏱ {formatTime(timeLeft)}
                             </div>
                         </div>
-
-                        <p className="text-slate-400 mt-2">
-                            Answer naturally and confidently.
-                        </p>
+                        <p className="text-slate-400 mt-2">Answer naturally and confidently.</p>
                         {followUpQuestion && (
                             <div className="mt-4 p-4 bg-purple-900/30 border border-purple-500 rounded-2xl">
-                                <p className="text-purple-300 text-sm font-semibold mb-2">
-                                    AI Follow-up Question
-                                </p>
-
-                                <p className="text-white text-lg">
-                                    {followUpQuestion}
-                                </p>
-
-                                <button 
+                                <p className="text-purple-300 text-sm font-semibold mb-2">AI Follow-up Question</p>
+                                <p className="text-white text-lg">{followUpQuestion}</p>
+                                <button
                                     onClick={() => {
                                         setQuestion(followUpQuestion);
                                         setFollowUpQuestion("");
@@ -499,255 +441,199 @@ function InterviewPage() {
                             </div>
                         )}
                     </div>
-
                     <div className="flex gap-4 w-full md:w-auto">
-
                         <button className="flex-1 md:flex-none justify-center bg-slate-800 px-6 py-3 rounded-2xl flex items-center gap-2 hover:bg-slate-700 transition">
                             <FiMic className="text-xl" /> Mic On
                         </button>
-
                         <button className="flex-1 md:flex-none justify-center bg-slate-800 px-6 py-3 rounded-2xl flex items-center gap-2 hover:bg-slate-700 transition">
                             <FiVideo className="text-xl" /> Camera On
                         </button>
-
                     </div>
-
                 </div>
 
-                {/* Question Area */}
-                <div className="flex-1 p-4 md:p-12">
-
-                    <motion.div
-                        initial={{ opacity: 0, y: 25 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.7 }}
-                        className="bg-slate-900 border border-slate-800 rounded-3xl md:rounded-[40px] p-6 md:p-12"
-                    >
-
-                        <div className="text-cyan-400 text-sm font-semibold mb-4">
-                            CURRENT QUESTION
-                        </div>
-
-                        <h2 className="text-2xl md:text-4xl font-bold leading-relaxed">
-                            <TypeAnimation
-                                key={question}
-                                sequence={[question]}
-                                wrapper="span"
-                                speed={50}
-                                repeat={0}
-                            />
-                        </h2>
-
-                        {/* Live Transcript */}
-                        <div className="mt-12 grid md:grid-cols-2 gap-8">
-
-                            {/* User Response */}
-                            <div className="bg-slate-800 rounded-3xl p-8 border border-slate-700 max-h-[500px] overflow-y-auto">
-
-                                <div className="flex items-center gap-4 mb-6">
-
-                                    <div className="w-14 h-14 rounded-full bg-cyan-500 flex items-center justify-center text-2xl">
-                                        <FaUserCircle className="text-white text-3xl" />
-                                    </div>
-
-                                    <div>
-                                        <h3 className="text-xl font-bold">
-                                            Your Response
-                                        </h3>
-
-                                        <p className="text-slate-400 text-sm">
-                                            Live transcript
-                                        </p>
-                                    </div>
-
+                {/* Main Content Grid */}
+                <div className="flex-1 grid grid-cols-1 lg:grid-cols-12 gap-8 mt-6">
+                    {/* Left Sidebar: AI Interlocutor & Metrics */}
+                    <div className="lg:col-span-3 space-y-6">
+                        <div className="bg-slate-900/50 border border-white/5 rounded-3xl p-6 backdrop-blur-xl text-center">
+                            <div className={`w-20 h-20 rounded-2xl bg-cyan-500/20 mx-auto flex items-center justify-center text-3xl mb-4 border border-cyan-500/30 transition-all duration-300 ${loading ? "shadow-[0_0_20px_rgba(6,182,212,0.4)] animate-pulse" : ""}`}>
+                                <FaRobot className="text-cyan-400" />
+                            </div>
+                            <h2 className="text-lg font-bold text-white">AI Interviewer</h2>
+                            <p className="text-xs text-gray-500 mt-1 uppercase tracking-widest">{role}</p>
+                            <div className="mt-8 text-left">
+                                <div className="flex justify-between text-[10px] text-gray-500 mb-2 font-bold uppercase tracking-tighter">
+                                    <span>PROGRESS</span>
+                                    <span>{progressPercentage}%</span>
                                 </div>
+                                <div className="w-full h-1.5 bg-white/5 rounded-full overflow-hidden">
+                                    <div className="h-full bg-cyan-500 transition-all duration-700 shadow-[0_0_10px_rgba(6,182,212,0.5)]" style={{ width: `${progressPercentage}%` }}></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="bg-slate-900/50 border border-white/5 rounded-3xl p-6 backdrop-blur-xl">
+                            <h3 className="text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-4">LIVE METRICS</h3>
+                            <div className="space-y-4">
+                                <div className="flex justify-between text-sm">
+                                    <span className="text-gray-400">Technical</span>
+                                    <span className="text-cyan-400 font-mono">{technicalScore}%</span>
+                                </div>
+                                <div className="flex justify-between text-sm">
+                                    <span className="text-gray-400">Communication</span>
+                                    <span className="text-purple-400 font-mono">{communicationScore}%</span>
+                                </div>
+                                <div className="flex justify-between text-sm">
+                                    <span className="text-gray-400">Confidence</span>
+                                    <span className="text-blue-400 font-mono">{confidenceScore}%</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
-                                <p className="text-slate-300 leading-relaxed text-lg">
-                                    <textarea
-                                        placeholder="Type your answer here..."
-                                        value={answer}
-                                        onChange={(e) => setAnswer(e.target.value)}
-                                        className="w-full min-h-[400px] bg-transparent outline-none resize-none text-slate-200"
-                                    ></textarea>
-                                </p>
+                    {/* Right Panel: Question, Response, Feedback */}
+                    <div className="lg:col-span-9 space-y-6">
+                        {/* Question Card */}
+                        <motion.div
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            className="bg-slate-900/80 border border-white/10 rounded-[2.5rem] p-8 md:p-12 shadow-2xl relative overflow-hidden"
+                        >
+                            <div className="absolute top-0 left-0 w-1 h-full bg-cyan-500 shadow-[0_0_15px_rgba(6,182,212,0.5)]"></div>
+                            <div className="flex items-center gap-2 mb-6">
+                                {isListening && <div className="w-2 h-2 bg-red-500 rounded-full animate-ping"></div>}
+                                <span className="text-cyan-400 text-xs font-bold uppercase tracking-[0.2em]">CURRENT QUESTION</span>
+                            </div>
+                            <h2 className="text-2xl md:text-3xl font-bold leading-relaxed text-white">
+                                <TypeAnimation key={question} sequence={[question]} wrapper="span" speed={70} repeat={0} />
+                            </h2>
+                        </motion.div>
 
+                        {/* Interactive Area: Transcript & AI Feedback */}
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                            {/* User Transcript Area */}
+                            <div className="bg-slate-800 rounded-3xl p-8 border border-slate-700 h-[450px] flex flex-col">
+                                <div className="flex items-center gap-4 mb-6">
+                                    <div className="w-12 h-12 rounded-full bg-cyan-500 flex items-center justify-center text-xl">
+                                        <FaUserCircle className="text-white" />
+                                    </div>
+                                    <div>
+                                        <h3 className="text-lg font-bold">Your Response</h3>
+                                        <p className="text-slate-400 text-xs uppercase tracking-widest">Live transcript</p>
+                                    </div>
+                                </div>
+                                <textarea
+                                    placeholder="Start speaking or type your answer here..."
+                                    value={answer}
+                                    onChange={(e) => setAnswer(e.target.value)}
+                                    className="flex-1 w-full bg-transparent outline-none resize-none text-slate-200 text-lg leading-relaxed font-light placeholder:text-slate-600"
+                                />
                             </div>
 
-                            {/* AI Feedback */}
-                            <div className="bg-slate-800 rounded-3xl p-8 border border-slate-700">
-
+                            {/* AI Live Feedback Area */}
+                            <div className="bg-slate-800 rounded-3xl p-8 border border-slate-700 h-[450px] flex flex-col">
                                 <div className="flex items-center gap-4 mb-6">
-
-                                    <div className={`w-14 h-14 rounded-full bg-purple-500 flex items-center justify-center text-2xl ${loading ? "animate-pulse shadow-[0_0_15px_rgba(168,85,247,0.5)]" : ""}`}>
+                                    <div className={`w-12 h-12 rounded-full bg-purple-500 flex items-center justify-center text-xl ${loading ? "animate-pulse shadow-[0_0_15px_rgba(168,85,247,0.5)]" : ""}`}>
                                         <FaRobot className="text-white" />
                                     </div>
-
                                     <div>
-                                        <h3 className="text-xl font-bold">
-                                            AI Analysis
-                                        </h3>
-
-                                        <div className="mt-4 text-slate-300 whitespace-pre-line">
-                                            {feedback}
-                                        </div>
+                                        <h3 className="text-lg font-bold">AI Analysis</h3>
+                                        <p className="text-slate-400 text-xs uppercase tracking-widest">{loading ? "Processing..." : "Real-time insights"}</p>
                                     </div>
-                                    <p className="text-slate-400 text-sm">
-                                        {loading ? "Processing response..." : ""}
-                                    </p>
                                 </div>
-
+                                <div className="flex-1 overflow-y-auto text-slate-300 whitespace-pre-line leading-relaxed text-base italic scrollbar-hide">
+                                    {feedback || "I'm listening... Give your best answer and click 'Submit' for analysis."}
+                                </div>
                             </div>
-
-                            <div className="space-y-4">
-
-                                <div className="flex items-center justify-between">
-                                    <span>Technical Accuracy</span>
-                                    <span className="text-cyan-400">{technicalScore}%</span>
-                                </div>
-
-                                <div className="flex items-center justify-between">
-                                    <span>Communication</span>
-                                    <span className="text-cyan-400">{communicationScore}%</span>
-                                </div>
-
-                                <div className="flex items-center justify-between">
-                                    <span>Confidence</span>
-                                    <span className="text-cyan-400">{confidenceScore}%</span>
-                                </div>
-
-                            </div>
-
                         </div>
 
-                    </motion.div>
-
-                    {/* Controls */}
-                    <div className="flex flex-col md:flex-row gap-5 mt-10">
-
-                        <button
-                            onClick={async () => {
-                                try {
-                                    setLoading(true);
-
-                                    const res = await fetch("https://interviewiq-backend-6iev.onrender.com/analyze-answer", {
-                                        method: "POST",
-                                        headers: {
-                                            "Content-Type": "application/json",
-                                        },
-                                        body: JSON.stringify({
-                                            question,
-                                            answer,
-                                        }),
-                                    });
-
-                                    const data = await res.json();
-
-                                    const aiText = data.feedback;
-
-                                    setFeedback(aiText);
-
-                                    const technicalMatch = aiText.match(/TECHNICAL:\s*(\d+)/);
-                                    const communicationMatch = aiText.match(/COMMUNICATION:\s*(\d+)/);
-                                    const confidenceMatch = aiText.match(/CONFIDENCE:\s*(\d+)/);
-
-                                    if (technicalMatch) {
-                                        setTechnicalScore(Number(technicalMatch[1]));
-                                    }
-
-                                    if (communicationMatch) {
-                                        setCommunicationScore(Number(communicationMatch[1]));
-                                    }
-
-                                    if (confidenceMatch) {
-                                        setConfidenceScore(Number(confidenceMatch[1]));
-                                    }
-
-                                    const followUpMatch = aiText.match(/FOLLOW_UP:\s*([\s\S]*)/);
-
-                                    if (followUpMatch) {
-                                        const followUp = followUpMatch[1].trim();
-
-                                        if (followUp !== "NONE") {
-                                            setFollowUpQuestion(followUp);
-                                        } else {
-                                            setFollowUpQuestion("");
+                        {/* Footer Controls */}
+                        <div className="flex flex-wrap items-center gap-4 mt-4 p-6 bg-slate-900/30 border border-white/5 rounded-[2rem] backdrop-blur-sm">
+                            <button
+                                onClick={async () => {
+                                    try {
+                                        setLoading(true);
+                                        const response = await fetch("http://localhost:8000/analyze-answer", {
+                                            method: "POST",
+                                            headers: { "Content-Type": "application/json" },
+                                            body: JSON.stringify({ question, answer }),
+                                        });
+                                        const data = await response.json();
+                                        const aiText = data.feedback;
+                                        setFeedback(aiText);
+                                        const technicalMatch = aiText.match(/TECHNICAL:\s*(\d+)/);
+                                        const communicationMatch = aiText.match(/COMMUNICATION:\s*(\d+)/);
+                                        const confidenceMatch = aiText.match(/CONFIDENCE:\s*(\d+)/);
+                                        if (technicalMatch) setTechnicalScore(Number(technicalMatch[1]));
+                                        if (communicationMatch) setCommunicationScore(Number(communicationMatch[1]));
+                                        if (confidenceMatch) setConfidenceScore(Number(confidenceMatch[1]));
+                                        const followUpMatch = aiText.match(/FOLLOW_UP:\s*([\s\S]*)/);
+                                        if (followUpMatch) {
+                                            const followUp = followUpMatch[1].trim();
+                                            if (followUp !== "NONE") setFollowUpQuestion(followUp);
+                                            else setFollowUpQuestion("");
                                         }
+                                        setInterviewHistory(prev => [...prev, {
+                                            type: "verbal",
+                                            question: question,
+                                            answer: answer,
+                                            feedback: aiText,
+                                            scores: {
+                                                technical: technicalMatch ? technicalMatch[1] : 0,
+                                                communication: communicationMatch ? communicationMatch[1] : 0,
+                                                confidence: confidenceMatch ? confidenceMatch[1] : 0
+                                            }
+                                        }]);
+                                    } catch (error) {
+                                        console.log(error);
+                                    } finally {
+                                        setLoading(false);
                                     }
+                                }}
+                                className="bg-cyan-500 hover:bg-cyan-600 text-white px-8 py-4 rounded-xl font-bold transition shadow-lg shadow-cyan-500/20 active:scale-95"
+                            >
+                                Submit Answer
+                            </button>
 
-                                    // Save to history
-                                    setInterviewHistory(prev => [...prev, {
-                                        type: "verbal",
-                                        question: question,
-                                        answer: answer,
-                                        feedback: aiText,
-                                        scores: {
-                                            technical: technicalMatch ? technicalMatch[1] : 0,
-                                            communication: communicationMatch ? communicationMatch[1] : 0,
-                                            confidence: confidenceMatch ? confidenceMatch[1] : 0
-                                        }
-                                    }]);
+                            <button
+                                onClick={isListening ? stopListening : startListening}
+                                className={`px-8 py-4 rounded-xl font-bold flex items-center gap-2 transition active:scale-95 ${isListening
+                                    ? "bg-red-500 hover:bg-red-600 shadow-lg shadow-red-500/20"
+                                    : "bg-purple-600 hover:bg-purple-700 shadow-lg shadow-purple-500/20 text-white"
+                                }`}
+                            >
+                                {isListening ? <FiMicOff className="text-xl" /> : <FiMic className="text-xl" />}
+                                {isListening ? "Stop Mic" : "Start Mic"}
+                            </button>
 
-                                } catch (error) {
-                                    console.log(error);
+                            <button
+                                onClick={nextQuestion}
+                                className="px-8 py-4 border border-white/10 hover:border-cyan-400 hover:bg-cyan-400/10 rounded-xl transition text-white font-bold active:scale-95"
+                            >
+                                Next Question
+                            </button>
 
-                                } finally {
-                                    setLoading(false);
-                                }
-                            }}
-                            className="w-full md:w-auto justify-center bg-cyan-500 hover:bg-cyan-600 transition px-8 py-4 rounded-2xl text-lg font-semibold"
-                        >
-                            Submit Answer
-                        </button>
+                            <button
+                                onClick={startCodingRound}
+                                disabled={isFetchingCode}
+                                className="bg-yellow-500 hover:bg-yellow-600 text-slate-900 px-8 py-4 rounded-xl font-bold flex items-center gap-2 transition disabled:opacity-50 active:scale-95"
+                            >
+                                {isFetchingCode ? <span className="animate-spin text-xl">⏳</span> : <BiCodeAlt className="text-xl" />}
+                                Coding Round
+                            </button>
 
-                        <button
-                            onClick={isListening ? stopListening : startListening}
-                            className={`w-full md:w-auto justify-center px-6 py-3 flex items-center gap-2 transition rounded-2xl text-lg font-semibold ${
-                                isListening 
-                                    ? "bg-red-500 hover:bg-red-600 shadow-[0_0_20px_rgba(239,68,68,0.5)] animate-pulse" 
-                                    : "bg-purple-600 hover:bg-purple-700"
-                            }`}
-                        >
-                            {isListening ? <FiMicOff className="text-2xl" /> : <FiMic className="text-2xl" />}
-                            {isListening ? "Stop Mic" : "Start Mic"}
-                        </button>
+                            <div className="flex-1"></div>
 
-                        <button
-                            onClick={() => {
-                                console.log("BUTTON CLICKED");
-                                nextQuestion();
-                            }}
-                            className="w-full md:w-auto justify-center px-6 py-3 border border-cyan-400 rounded-xl hover:bg-cyan-500/20 transition"
-                        >
-                            Next Question
-                        </button>
-                        <button
-                            onClick={() => setShowReport(true)}
-                            className="w-full md:w-auto justify-center px-6 py-3 border border-purple-500 rounded-xl hover:bg-purple-500/20 transition text-purple-400 font-semibold"
-                        >
-                            End & View Report
-                        </button>
-                        <button
-                            onClick={startCodingRound}
-                            disabled={isFetchingCode}
-                            className="w-full md:w-auto justify-center px-6 py-3 flex items-center gap-2 bg-yellow-500 hover:bg-yellow-600 transition rounded-2xl text-lg font-semibold text-slate-900 disabled:opacity-50"
-                        >
-                            {isFetchingCode ? (
-                                <>
-                                    <span className="animate-spin text-2xl">⏳</span> Generating...
-                                </>
-                            ) : (
-                                <>
-                                    <BiCodeAlt className="text-2xl" /> Start Coding Round
-                                </>
-                            )}
-                        </button>
+                            <button
+                                onClick={() => setShowReport(true)}
+                                className="px-6 py-3 text-red-400 hover:text-red-300 font-semibold transition"
+                            >
+                                End Interview
+                            </button>
+                        </div>
                     </div>
                 </div>
-
             </div>
-
-        </div >
-
+        </div>
     );
 }
 

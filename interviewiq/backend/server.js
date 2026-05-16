@@ -2,11 +2,25 @@ import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
 import fetch from "node-fetch";
+import mongoose from "mongoose";
+import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
+import multer from "multer";
+import { createRequire } from "module";
+const require = createRequire(import.meta.url);
+const pdfParse = require("pdf-parse");
+import User from "./models/User.js";
+import Job from "./models/Job.js";
 
 dotenv.config();
 console.log("KEY =", process.env.GEMINI_API_KEY);
 
 const app = express();
+const upload = multer({ storage: multer.memoryStorage() });
+
+mongoose.connect(process.env.MONGO_URI)
+    .then(() => console.log("Connected to MongoDB Atlas"))
+    .catch((err) => console.log("MongoDB connection error:", err));
 
 app.use(
     cors({
@@ -18,6 +32,135 @@ app.use(express.json());
 
 app.get("/", (req, res) => {
     res.send("Backend running...");
+});
+
+// Auth Middleware
+const authMiddleware = (req, res, next) => {
+    const token = req.headers.authorization?.split(" ")[1];
+    if (!token) return res.status(401).json({ error: "Unauthorized" });
+
+    try {
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        req.userId = decoded.id;
+        next();
+    } catch (err) {
+        res.status(401).json({ error: "Invalid token" });
+    }
+};
+
+// --- Auth Routes ---
+app.post("/api/auth/register", async (req, res) => {
+    try {
+        const { name, email, password } = req.body;
+        
+        const existingUser = await User.findOne({ email });
+        if (existingUser) {
+            return res.status(400).json({ error: "User already exists" });
+        }
+
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(password, salt);
+
+        const newUser = new User({
+            name,
+            email,
+            password: hashedPassword
+        });
+
+        await newUser.save();
+
+        const token = jwt.sign({ id: newUser._id }, process.env.JWT_SECRET, { expiresIn: "7d" });
+
+        res.status(201).json({ token, user: { id: newUser._id, name: newUser.name, email: newUser.email } });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+app.post("/api/auth/login", async (req, res) => {
+    try {
+        const { email, password } = req.body;
+
+        const user = await User.findOne({ email });
+        if (!user) {
+            return res.status(400).json({ error: "Invalid credentials" });
+        }
+
+        const isMatch = await bcrypt.compare(password, user.password);
+        if (!isMatch) {
+            return res.status(400).json({ error: "Invalid credentials" });
+        }
+
+        const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: "7d" });
+
+        res.json({ token, user: { id: user._id, name: user.name, email: user.email } });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// --- AI Resume Analyzer Route ---
+app.post("/api/analyze-resume", upload.single("resume"), async (req, res) => {
+    try {
+        if (!req.file) {
+            return res.status(400).json({ error: "No resume PDF provided" });
+        }
+        const { jobDescription } = req.body;
+        if (!jobDescription) {
+            return res.status(400).json({ error: "No job description provided" });
+        }
+
+        // Parse PDF buffer to text
+        const pdfData = await pdfParse(req.file.buffer);
+        const resumeText = pdfData.text;
+
+        // Send to Gemini
+        const response = await fetch(
+            `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${process.env.GEMINI_API_KEY}`,
+            {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    contents: [{
+                        parts: [{
+                            text: `
+You are an expert ATS (Applicant Tracking System) and senior recruiter.
+Analyze the following resume against the provided job description.
+
+JOB DESCRIPTION:
+${jobDescription}
+
+RESUME:
+${resumeText}
+
+Return ONLY a valid JSON object using this exact structure, but replace the values with your actual calculated analysis. The atsScore MUST be a dynamically calculated integer from 0 to 100 representing the true match percentage.
+
+{
+  "atsScore": [Insert calculated integer from 0 to 100],
+  "matchedKeywords": ["List", "of", "matching", "skills"],
+  "missingKeywords": ["List", "of", "missing", "skills"],
+  "strengths": ["List", "of", "resume", "strengths"],
+  "weaknesses": ["List", "of", "areas", "lacking"],
+  "improvementTips": ["Actionable", "tips", "for", "improvement"]
+}
+`
+                        }]
+                    }]
+                })
+            }
+        );
+
+        const data = await response.json();
+        const textResponse = data.candidates?.[0]?.content?.parts?.[0]?.text || "";
+        const cleanJson = textResponse.replace(/```json/g, "").replace(/```/g, "").trim();
+        
+        const result = JSON.parse(cleanJson);
+        res.json(result);
+
+    } catch (err) {
+        console.error("Resume Analysis Error:", err);
+        res.status(500).json({ error: err.message || "Failed to analyze resume" });
+    }
 });
 
 app.get("/generate-question", async (req, res) => {
@@ -37,7 +180,7 @@ app.get("/generate-question", async (req, res) => {
                         {
                             parts: [
                                 {
-                                    text: `Generate one ${role} interview question only.`
+                                    text: `Generate one single ${role} interview question. The question MUST be strictly conversational, direct, and under 2 sentences maximum. Do not add any introductory or concluding text, just output the question itself.`
                                 }
                             ]
                         }
@@ -93,25 +236,16 @@ ${question}
 User Answer:
 ${answer}
 
-Interview Question:
-${question}
-
-User Answer:
-${answer}
-
-You are a senior technical interviewer.
-
-Analyze the answer professionally.
+You are a senior technical interviewer. Analyze the answer professionally but concisely.
 
 Give:
 1. Technical Accuracy score out of 100
 2. Communication score out of 100
 3. Confidence score out of 100
-4. Short improvement tips
+4. Short improvement tips (1 sentence max)
 
 Then decide:
-
-- If the answer is weak or incomplete, generate ONE follow-up interview question.
+- If the answer is weak or incomplete, generate ONE follow-up interview question (under 2 sentences).
 - If the answer is strong, write: "FOLLOW_UP: NONE"
 
 Format response exactly like this:
@@ -230,6 +364,96 @@ Do not use triple backticks.
 
     }
 });
+
+app.post("/api/optimize-linkedin", authMiddleware, async (req, res) => {
+    try {
+        const { profileText } = req.body;
+        if (!profileText) return res.status(400).json({ error: "Profile text is required" });
+
+        const response = await fetch(
+            `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${process.env.GEMINI_API_KEY}`,
+            {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    contents: [{
+                        parts: [{
+                            text: `
+You are a career coaching expert specializing in LinkedIn optimization.
+Analyze the following LinkedIn profile text (Summary or Headline) and provide professional improvements.
+
+PROFILE TEXT:
+${profileText}
+
+Return ONLY a valid JSON object with the following fields:
+{
+  "suggestedHeadline": "A catchy, keyword-rich headline",
+  "optimizedAbout": "A compelling, first-person narrative summary",
+  "seoKeywords": ["List", "of", "relevant", "industry", "keywords"],
+  "feedback": "2-3 sentences of strategic advice"
+}
+`
+                        }]
+                    }]
+                })
+            }
+        );
+
+        const data = await response.json();
+        const textResponse = data.candidates?.[0]?.content?.parts?.[0]?.text || "";
+        const cleanJson = textResponse.replace(/```json/g, "").replace(/```/g, "").trim();
+        const result = JSON.parse(cleanJson);
+        res.json(result);
+
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// --- Job Tracker Routes ---
+app.post("/api/jobs", authMiddleware, async (req, res) => {
+    try {
+        const { company, role, status, notes, salary } = req.body;
+        const newJob = new Job({ userId: req.userId, company, role, status, notes, salary });
+        await newJob.save();
+        res.json(newJob);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+app.get("/api/jobs", authMiddleware, async (req, res) => {
+    try {
+        const jobs = await Job.find({ userId: req.userId }).sort({ createdAt: -1 });
+        res.json(jobs);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+app.put("/api/jobs/:id", authMiddleware, async (req, res) => {
+    try {
+        const { status, notes, salary } = req.body;
+        const updatedJob = await Job.findOneAndUpdate(
+            { _id: req.params.id, userId: req.userId },
+            { status, notes, salary },
+            { new: true }
+        );
+        res.json(updatedJob);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+app.delete("/api/jobs/:id", authMiddleware, async (req, res) => {
+    try {
+        await Job.findOneAndDelete({ _id: req.params.id, userId: req.userId });
+        res.json({ message: "Job deleted" });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
 app.listen(8000, () => {
     console.log("Server running on port 8000");
 });

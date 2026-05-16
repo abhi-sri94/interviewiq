@@ -2,8 +2,10 @@ import Navbar from "../components/Navbar";
 import { motion } from "framer-motion";
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
+import { useAuth } from "../context/AuthContext";
 
 function HomePage() {
+    const { user } = useAuth();
     const [selectedRole, setSelectedRole] = useState("Frontend React Developer");
 
 
@@ -69,7 +71,7 @@ function HomePage() {
                     </div>
 
                     <div className="flex flex-col md:flex-row gap-4 md:gap-5 w-full md:w-auto mt-2">
-                        <Link to="/interview" state={{ role: selectedRole }} className="w-full md:w-auto">
+                        <Link to={user ? "/dashboard/interview" : "/login"} state={{ role: selectedRole }} className="w-full md:w-auto">
                             <button className="w-full md:w-auto bg-cyan-500 hover:bg-cyan-600 transition px-10 py-4 rounded-2xl text-lg font-semibold cursor-pointer">
                                 Start Interview
                             </button>
@@ -292,8 +294,8 @@ function HomePage() {
 
                             <div className="flex flex-col md:flex-row justify-center gap-4 md:gap-6 mt-10 md:mt-12">
 
-                                <Link to="/interview" state={{ role: selectedRole }} className="w-full md:w-auto">
-                                    <button className="w-full w-full bg-cyan-500 hover:bg-cyan-600 transition-all duration-300 px-10 py-4 md:py-5 rounded-2xl text-lg font-bold shadow-lg shadow-cyan-500/30">
+                                <Link to={user ? "/dashboard/interview" : "/login"} state={{ role: selectedRole }} className="w-full md:w-auto">
+                                    <button className="w-full bg-cyan-500 hover:bg-cyan-600 transition-all duration-300 px-10 py-4 md:py-5 rounded-2xl text-lg font-bold shadow-lg shadow-cyan-500/30">
                                         Start Free
                                     </button>
                                 </Link>

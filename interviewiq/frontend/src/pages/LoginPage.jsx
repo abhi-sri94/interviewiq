@@ -1,7 +1,42 @@
 import { motion } from "framer-motion";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useState } from "react";
+import { useAuth } from "../context/AuthContext";
 
 function LoginPage() {
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    const [error, setError] = useState("");
+    const [loading, setLoading] = useState(false);
+    const { login } = useAuth();
+    const navigate = useNavigate();
+
+    const handleLogin = async (e) => {
+        e.preventDefault();
+        setError("");
+        setLoading(true);
+
+        try {
+            const res = await fetch("http://localhost:8000/api/auth/login", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ email, password }),
+            });
+            const data = await res.json();
+
+            if (!res.ok) {
+                throw new Error(data.error || "Login failed");
+            }
+
+            login(data.token, data.user);
+            navigate("/dashboard");
+        } catch (err) {
+            setError(err.message);
+        } finally {
+            setLoading(false);
+        }
+    };
+
     return (
         <div className="min-h-screen bg-[#020617] flex items-center justify-center px-6">
 
@@ -21,23 +56,34 @@ function LoginPage() {
                 </p>
 
                 <div className="space-y-6">
+                    {error && <p className="text-red-500 text-sm">{error}</p>}
+                    <form onSubmit={handleLogin} className="space-y-6">
 
                     <input
                         type="email"
                         placeholder="Enter your email"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        required
                         className="w-full bg-slate-800 border border-slate-700 rounded-2xl px-5 py-4 text-white outline-none focus:border-cyan-400"
                     />
 
                     <input
                         type="password"
                         placeholder="Enter your password"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        required
                         className="w-full bg-slate-800 border border-slate-700 rounded-2xl px-5 py-4 text-white outline-none focus:border-cyan-400"
                     />
 
-                    <button className="w-full bg-cyan-500 hover:bg-cyan-600 transition-all duration-300 py-4 rounded-2xl text-lg font-bold text-white">
-                        Login
+                    <button 
+                        disabled={loading}
+                        type="submit" 
+                        className="w-full bg-cyan-500 hover:bg-cyan-600 transition-all duration-300 py-4 rounded-2xl text-lg font-bold text-white disabled:opacity-50">
+                        {loading ? "Logging in..." : "Login"}
                     </button>
-
+                    </form>
                 </div>
 
                 <p className="text-slate-400 text-center mt-8">
