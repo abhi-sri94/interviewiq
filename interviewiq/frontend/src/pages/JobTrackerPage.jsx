@@ -15,6 +15,7 @@ function JobTrackerPage() {
     const [jobs, setJobs] = useState([]);
     const [loading, setLoading] = useState(true);
     const [showModal, setShowModal] = useState(false);
+    const [editingJobId, setEditingJobId] = useState(null);
     const [newJob, setNewJob] = useState({ company: "", role: "", status: "Applied", notes: "", salary: "" });
 
     useEffect(() => {
@@ -38,8 +39,13 @@ function JobTrackerPage() {
     const handleAddJob = async (e) => {
         e.preventDefault();
         try {
-            const res = await fetch("http://localhost:8000/api/jobs", {
-                method: "POST",
+            const method = editingJobId ? "PUT" : "POST";
+            const url = editingJobId 
+                ? `http://localhost:8000/api/jobs/${editingJobId}` 
+                : "http://localhost:8000/api/jobs";
+
+            const res = await fetch(url, {
+                method: method,
                 headers: { 
                     "Content-Type": "application/json",
                     Authorization: `Bearer ${token}` 
@@ -47,12 +53,31 @@ function JobTrackerPage() {
                 body: JSON.stringify(newJob)
             });
             const data = await res.json();
-            setJobs([data, ...jobs]);
+            
+            if (editingJobId) {
+                setJobs(jobs.map(j => j._id === editingJobId ? data : j));
+            } else {
+                setJobs([data, ...jobs]);
+            }
+
             setShowModal(false);
+            setEditingJobId(null);
             setNewJob({ company: "", role: "", status: "Applied", notes: "", salary: "" });
         } catch (err) {
             console.error(err);
         }
+    };
+
+    const openEditModal = (job) => {
+        setEditingJobId(job._id);
+        setNewJob({
+            company: job.company,
+            role: job.role,
+            status: job.status,
+            notes: job.notes || "",
+            salary: job.salary || ""
+        });
+        setShowModal(true);
     };
 
     const updateStatus = async (id, newStatus) => {
@@ -93,7 +118,11 @@ function JobTrackerPage() {
                     <p className="text-gray-400 text-sm">Organize your job search and track your progress in one place.</p>
                 </div>
                 <button 
-                    onClick={() => setShowModal(true)}
+                    onClick={() => {
+                        setEditingJobId(null);
+                        setNewJob({ company: "", role: "", status: "Applied", notes: "", salary: "" });
+                        setShowModal(true);
+                    }}
                     className="flex items-center gap-2 bg-cyan-500 hover:bg-cyan-600 text-white px-5 py-2.5 rounded-xl font-medium transition-all shadow-lg shadow-cyan-500/20 active:scale-95"
                 >
                     <FiPlus className="text-xl" /> Add Application
@@ -122,14 +151,29 @@ function JobTrackerPage() {
                                 >
                                     <div className="flex justify-between items-start mb-2">
                                         <h3 className="font-bold text-white group-hover:text-cyan-400 transition-colors">{job.company}</h3>
-                                        <button 
-                                            onClick={() => deleteJob(job._id)}
-                                            className="text-gray-600 hover:text-red-400 p-1 opacity-0 group-hover:opacity-100 transition-opacity"
-                                        >
-                                            <FiTrash2 size={14} />
-                                        </button>
+                                        <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                                            <button 
+                                                onClick={() => openEditModal(job)}
+                                                className="text-gray-600 hover:text-cyan-400 p-1"
+                                            >
+                                                <FiEdit2 size={14} />
+                                            </button>
+                                            <button 
+                                                onClick={() => deleteJob(job._id)}
+                                                className="text-gray-600 hover:text-red-400 p-1"
+                                            >
+                                                <FiTrash2 size={14} />
+                                            </button>
+                                        </div>
                                     </div>
-                                    <p className="text-sm text-gray-400 mb-2">{job.role}</p>
+                                    <div className="flex justify-between items-center mb-2">
+                                        <p className="text-sm text-gray-400">{job.role}</p>
+                                        {job.salary && (
+                                            <span className="text-[10px] bg-green-500/10 text-green-400 px-2 py-0.5 rounded-md border border-green-500/10 font-mono">
+                                                {job.salary}
+                                            </span>
+                                        )}
+                                    </div>
                                     
                                     {job.notes && (
                                         <p className="text-[11px] text-gray-500 mb-4 line-clamp-2 italic bg-black/20 p-2 rounded-lg border border-white/5">
@@ -156,7 +200,7 @@ function JobTrackerPage() {
                 ))}
             </div>
 
-            {/* Add Job Modal */}
+            {/* Add/Edit Job Modal */}
             <AnimatePresence>
                 {showModal && (
                     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
@@ -164,7 +208,10 @@ function JobTrackerPage() {
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
                             exit={{ opacity: 0 }}
-                            onClick={() => setShowModal(false)}
+                            onClick={() => {
+                                setShowModal(false);
+                                setEditingJobId(null);
+                            }}
                             className="absolute inset-0 bg-black/80 backdrop-blur-md"
                         />
                         <motion.form 
@@ -174,7 +221,9 @@ function JobTrackerPage() {
                             onSubmit={handleAddJob}
                             className="relative bg-gray-900 border border-white/10 p-8 rounded-3xl w-full max-w-md shadow-2xl"
                         >
-                            <h2 className="text-2xl font-bold text-white mb-6">New Application</h2>
+                            <h2 className="text-2xl font-bold text-white mb-6">
+                                {editingJobId ? "Edit Application" : "New Application"}
+                            </h2>
                             <div className="space-y-4">
                                 <div>
                                     <label className="block text-xs font-medium text-gray-400 mb-1.5 uppercase tracking-wider">Company Name</label>
@@ -231,7 +280,10 @@ function JobTrackerPage() {
                             <div className="flex gap-3 mt-8">
                                 <button 
                                     type="button"
-                                    onClick={() => setShowModal(false)}
+                                    onClick={() => {
+                                        setShowModal(false);
+                                        setEditingJobId(null);
+                                    }}
                                     className="flex-1 bg-white/5 hover:bg-white/10 text-white font-medium py-3 rounded-xl transition-all"
                                 >
                                     Cancel
@@ -240,7 +292,7 @@ function JobTrackerPage() {
                                     type="submit"
                                     className="flex-1 bg-cyan-500 hover:bg-cyan-600 text-white font-medium py-3 rounded-xl transition-all"
                                 >
-                                    Add Job
+                                    {editingJobId ? "Save Changes" : "Add Job"}
                                 </button>
                             </div>
                         </motion.form>
