@@ -129,7 +129,13 @@ function JobTrackerPage() {
                                             <FiTrash2 size={14} />
                                         </button>
                                     </div>
-                                    <p className="text-sm text-gray-400 mb-4">{job.role}</p>
+                                    <p className="text-sm text-gray-400 mb-2">{job.role}</p>
+                                    
+                                    {job.notes && (
+                                        <p className="text-[11px] text-gray-500 mb-4 line-clamp-2 italic bg-black/20 p-2 rounded-lg border border-white/5">
+                                            "{job.notes}"
+                                        </p>
+                                    )}
                                     
                                     <div className="flex gap-2 items-center">
                                         <select 
