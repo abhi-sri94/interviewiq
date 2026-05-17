@@ -456,7 +456,7 @@ function InterviewPage() {
                 {/* Main Content Grid */}
                 <div className="flex-1 grid grid-cols-1 lg:grid-cols-12 gap-8 mt-6">
                     {/* Left Sidebar: AI Interlocutor & Metrics */}
-                    <div className="lg:col-span-3 space-y-6">
+                    <div className="lg:col-span-3 space-y-6 order-2 lg:order-1">
                         <div className="bg-slate-900/50 border border-white/5 rounded-3xl p-6 backdrop-blur-xl text-center">
                             <div className={`w-20 h-20 rounded-2xl bg-cyan-500/20 mx-auto flex items-center justify-center text-3xl mb-4 border border-cyan-500/30 transition-all duration-300 ${loading ? "shadow-[0_0_20px_rgba(6,182,212,0.4)] animate-pulse" : ""}`}>
                                 <FaRobot className="text-cyan-400" />
@@ -493,7 +493,7 @@ function InterviewPage() {
                     </div>
 
                     {/* Right Panel: Question, Response, Feedback */}
-                    <div className="lg:col-span-9 space-y-6">
+                    <div className="lg:col-span-9 space-y-6 order-1 lg:order-2">
                         {/* Question Card */}
                         <motion.div
                             initial={{ opacity: 0, y: 20 }}

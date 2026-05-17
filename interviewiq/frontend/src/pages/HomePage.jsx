@@ -30,7 +30,7 @@ function HomePage() {
                     initial={{ opacity: 0, y: 40 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.8 }}
-                    className="text-6xl md:text-7xl font-black leading-tight max-w-5xl"
+                    className="text-4xl sm:text-5xl md:text-7xl font-black leading-tight max-w-5xl"
                 >
                     Crack Your Next
                     <span className="text-cyan-400"> Tech Interview </span>
@@ -42,7 +42,7 @@ function HomePage() {
                     initial={{ opacity: 0, y: 30 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.3, duration: 0.8 }}
-                    className="text-slate-400 text-xl mt-8 max-w-2xl leading-relaxed"
+                    className="text-slate-400 text-base md:text-xl mt-6 md:mt-8 max-w-2xl leading-relaxed"
                 >
                     Practice real technical interviews with AI, receive instant
                     feedback, improve confidence, and track your performance.
