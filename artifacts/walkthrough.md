@@ -14,6 +14,7 @@ graph TD
     B -->|Mongoose Queries| C[MongoDB Atlas Database]
     B -->|AI Generation Calls| D[Google Gemini Pro API]
     A -->|Live Audio Streams| E[Web Speech Transcription API]
+    A -->|Sandboxed Coding Runs| F[Piston Secure Execution Engine]
 ```
 
 ### Technical Stack
@@ -22,6 +23,7 @@ graph TD
 *   **Database**: MongoDB & Mongoose.
 *   **AI Engine**: Google Gemini Pro (Text & Code analysis models).
 *   **Hosting**: Vercel (Frontend), Render (Backend).
+*   **Execution**: Piston API (Remote multi-language sandbox compiler).
 
 ---
 
@@ -36,10 +38,11 @@ graph TD
 *   **Intelligent AI Questioning**: Fully integrated Gemini Pro API to generate customized, role-specific questions and realistic, conversational follow-ups based on candidates' answers.
 *   **Multi-Metric Score Engine**: Provides detailed post-interview analytics measuring technical precision, communication clarity, confidence indicators, and custom actionable suggestions.
 
-### 💻 AI Coding Sandbox (Technical Round)
-*   **Integrated Monaco Editor**: Embedded VS Code’s signature Monaco Editor directly inside the browser for writing Javascript live.
-*   **Dynamic Problem Generation**: AI dynamically generates custom coding problems based on selected job roles.
-*   **Code Sandbox Execution**: Simulates javascript runtimes and displays actual console output, highlighting compile-time syntax errors and success states.
+### 💻 AI Coding Sandbox & Multi-Language Compiler (Technical Round)
+*   **Integrated Monaco Editor**: Embedded VS Code’s signature Monaco Editor directly inside the browser for writing code live.
+*   **Multi-Language Workspace**: Features a gorgeous runtime language dropdown selector. Switch seamlessly between **JavaScript**, **Python**, and **Java** with real-time Monaco syntax grammar loading!
+*   **Dynamic Problem Generator**: The backend prompts Gemini Pro to generate targeted coding questions, starter templates, and expected keywords specifically matched to the selected language.
+*   **Secure Execution Engine**: Submits code to Piston compiling servers with dynamic language/version tags (e.g. Node 18, Python 3.10, Java 15) to execute and return exact stdout/stderr logs.
 
 ### 📄 ATS Resume Analyzer
 *   **Drag-and-Drop Uploader**: Custom UI supporting direct PDF file parsing.
@@ -55,7 +58,20 @@ graph TD
 
 ---
 
-## 🛠️ 3. Production & Mobile Overhauls
+## 📈 3. Persistent Analytics Dashboard
+
+We upgraded the platform with dynamic, real-time database intelligence:
+*   **MongoDB Interview Persistence**: Designed an `Interview` Mongoose model capturing user mock rounds, verbal transcripts, technical/communication scores, compiled code blocks, and AI advice.
+*   **Auto-Uploader Integration**: Configured `InterviewPage.jsx` to compile, average, and securely submit the user's completed round results to the database as soon as they view their report.
+*   **Live Metrics Calculations**:
+    *   **Interviews Completed**: Tracks total mock interviews run.
+    *   **Average Performance**: Computes exact average score across all verbal and coding sessions.
+    *   **Roles Practiced**: Computes unique role combinations practicing on the platform.
+*   **Dynamic Recent History**: Renders a sleek chronological list of the user's five most recent mock interview sessions with accurate titles, detailed dates, and colored score badges.
+
+---
+
+## 🛠️ 4. Production & Mobile Overhauls
 
 To transition InterviewIQ from a local toy project into a state-of-the-art production portfolio application, we completed the following critical stability upgrades:
 
@@ -77,5 +93,5 @@ We removed all hardcoded `http://localhost:8000` URLs across all six primary pag
 
 ---
 
-## 🏆 4. The Final Portfolio Result
+## 🏆 5. The Final Portfolio Result
 The platform is now **100% stable, fully responsive, and production-deployed**. Anyone accessing `interviewiq-frontend-ten.vercel.app` from any computer, phone, or tablet can instantly create accounts, run simulated AI interviews, get scored, and track their job search with absolute zero latency. 🚀
