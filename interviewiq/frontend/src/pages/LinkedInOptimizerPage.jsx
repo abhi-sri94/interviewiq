@@ -2,6 +2,8 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { FiLinkedin, FiSend, FiCopy, FiCheck, FiInfo } from "react-icons/fi";
 import { useAuth } from "../context/AuthContext";
+import { API_BASE_URL } from "../config";
+
 
 function LinkedInOptimizerPage() {
     const { token } = useAuth();
@@ -14,7 +16,7 @@ function LinkedInOptimizerPage() {
         if (!profileText.trim()) return;
         setLoading(true);
         try {
-            const res = await fetch("http://localhost:8000/api/optimize-linkedin", {
+            const res = await fetch(`${API_BASE_URL}/api/optimize-linkedin`, {
                 method: "POST",
                 headers: { 
                     "Content-Type": "application/json",

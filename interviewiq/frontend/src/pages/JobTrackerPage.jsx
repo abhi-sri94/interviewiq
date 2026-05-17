@@ -2,6 +2,8 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { FiPlus, FiTrash2, FiEdit2, FiCheckCircle, FiClock, FiXCircle, FiTrendingUp } from "react-icons/fi";
 import { useAuth } from "../context/AuthContext";
+import { API_BASE_URL } from "../config";
+
 
 const COLUMNS = [
     { id: "Applied", title: "Applied", icon: <FiClock className="text-blue-400" />, bg: "bg-blue-500/10", border: "border-blue-500/20" },
@@ -24,7 +26,7 @@ function JobTrackerPage() {
 
     const fetchJobs = async () => {
         try {
-            const res = await fetch("http://localhost:8000/api/jobs", {
+            const res = await fetch(`${API_BASE_URL}/api/jobs`, {
                 headers: { Authorization: `Bearer ${token}` }
             });
             const data = await res.json();
@@ -41,8 +43,8 @@ function JobTrackerPage() {
         try {
             const method = editingJobId ? "PUT" : "POST";
             const url = editingJobId 
-                ? `http://localhost:8000/api/jobs/${editingJobId}` 
-                : "http://localhost:8000/api/jobs";
+                ? `${API_BASE_URL}/api/jobs/${editingJobId}` 
+                : `${API_BASE_URL}/api/jobs`;
 
             const res = await fetch(url, {
                 method: method,
@@ -82,7 +84,7 @@ function JobTrackerPage() {
 
     const updateStatus = async (id, newStatus) => {
         try {
-            const res = await fetch(`http://localhost:8000/api/jobs/${id}`, {
+            const res = await fetch(`${API_BASE_URL}/api/jobs/${id}`, {
                 method: "PUT",
                 headers: { 
                     "Content-Type": "application/json",
@@ -100,7 +102,7 @@ function JobTrackerPage() {
     const deleteJob = async (id) => {
         if (!window.confirm("Are you sure you want to delete this application?")) return;
         try {
-            await fetch(`http://localhost:8000/api/jobs/${id}`, {
+            await fetch(`${API_BASE_URL}/api/jobs/${id}`, {
                 method: "DELETE",
                 headers: { Authorization: `Bearer ${token}` }
             });

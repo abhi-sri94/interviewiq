@@ -2,6 +2,8 @@ import { motion } from "framer-motion";
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { useAuth } from "../context/AuthContext";
+import { API_BASE_URL } from "../config";
+
 
 function LoginPage() {
     const [email, setEmail] = useState("");
@@ -17,7 +19,7 @@ function LoginPage() {
         setLoading(true);
 
         try {
-            const res = await fetch("http://localhost:8000/api/auth/login", {
+            const res = await fetch(`${API_BASE_URL}/api/auth/login`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ email, password }),

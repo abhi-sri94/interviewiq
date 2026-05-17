@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
+import { API_BASE_URL } from "../config";
+
 
 function ResumeAnalyzerPage() {
     const [file, setFile] = useState(null);
@@ -31,7 +33,7 @@ function ResumeAnalyzerPage() {
         formData.append("jobDescription", jobDescription);
 
         try {
-            const res = await fetch("http://localhost:8000/api/analyze-resume", {
+            const res = await fetch(`${API_BASE_URL}/api/analyze-resume`, {
                 method: "POST",
                 body: formData,
             });

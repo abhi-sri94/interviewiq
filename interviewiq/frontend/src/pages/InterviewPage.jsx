@@ -6,6 +6,8 @@ import { FiMic, FiMicOff, FiVideo, FiVideoOff } from "react-icons/fi";
 import { FaRobot, FaUserCircle } from "react-icons/fa";
 import { BiCodeAlt } from "react-icons/bi";
 import { Link, useLocation } from "react-router-dom";
+import { API_BASE_URL } from "../config";
+
 
 const SpeechRecognition =
     window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -140,7 +142,7 @@ function InterviewPage() {
 
     const fetchQuestion = async () => {
         try {
-            const response = await fetch(`http://localhost:8000/generate-question?role=${encodeURIComponent(role)}`);
+            const response = await fetch(`${API_BASE_URL}/generate-question?role=${encodeURIComponent(role)}`);
 
             const data = await response.json();
 
@@ -169,7 +171,7 @@ function InterviewPage() {
             setTimeLeft(600);
 
             const res = await fetch(
-                `http://localhost:8000/generate-coding-question?role=${encodeURIComponent(role)}`
+                `${API_BASE_URL}/generate-coding-question?role=${encodeURIComponent(role)}`
             );
 
             const data = await res.json();
@@ -552,7 +554,7 @@ function InterviewPage() {
                                 onClick={async () => {
                                     try {
                                         setLoading(true);
-                                        const response = await fetch("http://localhost:8000/analyze-answer", {
+                                        const response = await fetch(`${API_BASE_URL}/analyze-answer`, {
                                             method: "POST",
                                             headers: { "Content-Type": "application/json" },
                                             body: JSON.stringify({ question, answer }),
