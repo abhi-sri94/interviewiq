@@ -113,8 +113,8 @@ function JobTrackerPage() {
     };
 
     return (
-        <div className="p-8 max-w-7xl mx-auto">
-            <header className="flex justify-between items-center mb-8">
+        <div className="p-4 sm:p-8 max-w-7xl mx-auto">
+            <header className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
                 <div>
                     <h1 className="text-3xl font-bold text-white mb-2">Job Application Tracker</h1>
                     <p className="text-gray-400 text-sm">Organize your job search and track your progress in one place.</p>
@@ -153,7 +153,7 @@ function JobTrackerPage() {
                                 >
                                     <div className="flex justify-between items-start mb-2">
                                         <h3 className="font-bold text-white group-hover:text-cyan-400 transition-colors">{job.company}</h3>
-                                        <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                                        <div className="flex gap-1.5 opacity-100 lg:opacity-0 lg:group-hover:opacity-100 transition-opacity">
                                             <button 
                                                 onClick={() => openEditModal(job)}
                                                 className="text-gray-600 hover:text-cyan-400 p-1"

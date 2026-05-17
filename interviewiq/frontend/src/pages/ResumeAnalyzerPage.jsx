@@ -88,7 +88,7 @@ function ResumeAnalyzerPage() {
                     <div className="bg-slate-900 border border-slate-800 rounded-3xl p-8 flex flex-col">
                         <h2 className="text-2xl font-bold mb-4">2. Job Description</h2>
                         <textarea
-                            className="w-full flex-1 bg-slate-800 border border-slate-700 rounded-2xl p-5 text-white outline-none focus:border-cyan-400 resize-none"
+                            className="w-full flex-1 min-h-[200px] md:min-h-[250px] bg-slate-800 border border-slate-700 rounded-2xl p-5 text-white outline-none focus:border-cyan-400 resize-none"
                             placeholder="Paste the job description here..."
                             value={jobDescription}
                             onChange={(e) => setJobDescription(e.target.value)}

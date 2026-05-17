@@ -46,7 +46,7 @@ function LoginPage() {
                 initial={{ opacity: 0, y: 40 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.7 }}
-                className="w-full max-w-md bg-slate-900/70 border border-slate-800 rounded-[32px] p-10 backdrop-blur-xl"
+                className="w-full max-w-md bg-slate-900/70 border border-slate-800 rounded-[32px] p-6 sm:p-10 backdrop-blur-xl"
             >
 
                 <h1 className="text-4xl font-black text-white mb-3">
