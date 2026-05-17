@@ -27,6 +27,19 @@ function InterviewPage() {
             return;
         }
 
+        const getPistonConfig = (lang) => {
+            switch (lang.toLowerCase()) {
+                case "python":
+                    return { language: "python", version: "3.10.0" };
+                case "java":
+                    return { language: "java", version: "15.0.2" };
+                default:
+                    return { language: "javascript", version: "18.15.0" };
+            }
+        };
+
+        const config = getPistonConfig(selectedLanguage);
+
         try {
             setIsRunningCode(true);
 
@@ -37,8 +50,8 @@ function InterviewPage() {
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify({
-                    language: "javascript",
-                    version: "18.15.0",
+                    language: config.language,
+                    version: config.version,
                     files: [{ content: code }],
                 }),
             });
@@ -101,6 +114,7 @@ function InterviewPage() {
     const [codingMode, setCodingMode] = useState(false);
     const [isFetchingCode, setIsFetchingCode] = useState(false);
     const [isRunningCode, setIsRunningCode] = useState(false);
+    const [selectedLanguage, setSelectedLanguage] = useState("javascript");
 
     const [currentCodingQuestion, setCurrentCodingQuestion] =
         useState(null);
@@ -164,14 +178,14 @@ function InterviewPage() {
         await fetchQuestion();
     };
 
-    const startCodingRound = async () => {
+    const startCodingRound = async (lang = selectedLanguage) => {
         try {
             setIsFetchingCode(true);
             setCodingMode(true);
             setTimeLeft(600);
 
             const res = await fetch(
-                `${API_BASE_URL}/generate-coding-question?role=${encodeURIComponent(role)}`
+                `${API_BASE_URL}/generate-coding-question?role=${encodeURIComponent(role)}&language=${lang}`
             );
 
             const data = await res.json();
@@ -235,6 +249,52 @@ function InterviewPage() {
 
         setIsListening(false);
     };
+
+    const saveInterviewSession = async (history) => {
+        if (history.length === 0) return;
+
+        let totalScore = 0;
+        let scoreCount = 0;
+
+        history.forEach((item) => {
+            if (item.type === "verbal" && item.scores) {
+                const tech = Number(item.scores.technical) || 0;
+                const comm = Number(item.scores.communication) || 0;
+                const conf = Number(item.scores.confidence) || 0;
+                totalScore += (tech + comm + conf) / 3;
+                scoreCount++;
+            } else if (item.type === "coding") {
+                totalScore += item.passed ? 100 : 0;
+                scoreCount++;
+            }
+        });
+
+        const averagePerformance = scoreCount > 0 ? Math.round(totalScore / scoreCount) : 0;
+
+        try {
+            const token = localStorage.getItem("token");
+            await fetch(`${API_BASE_URL}/api/interviews`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`
+                },
+                body: JSON.stringify({
+                    role,
+                    averagePerformance,
+                    history
+                })
+            });
+        } catch (err) {
+            console.error("Failed to save interview session:", err);
+        }
+    };
+
+    useEffect(() => {
+        if (showReport && interviewHistory.length > 0) {
+            saveInterviewSession(interviewHistory);
+        }
+    }, [showReport]);
 
     if (showReport) {
         return (
@@ -355,10 +415,30 @@ function InterviewPage() {
                     {currentCodingQuestion.question}
                 </p>
 
+                <div className="flex justify-between items-center mb-4">
+                    <h2 className="text-xl font-bold text-slate-300">Code Workspace</h2>
+                    <div className="flex items-center gap-3">
+                        <span className="text-sm text-slate-400 font-medium">Language:</span>
+                        <select
+                            value={selectedLanguage}
+                            onChange={(e) => {
+                                const newLang = e.target.value;
+                                setSelectedLanguage(newLang);
+                                startCodingRound(newLang);
+                            }}
+                            className="bg-slate-900 border border-slate-700 text-cyan-400 font-bold px-3 py-1.5 rounded-xl outline-none cursor-pointer hover:border-cyan-500/50 transition-all text-sm"
+                        >
+                            <option value="javascript">JavaScript</option>
+                            <option value="python">Python</option>
+                            <option value="java">Java</option>
+                        </select>
+                    </div>
+                </div>
+
                 <div className="w-full h-[400px] border border-slate-700 rounded-2xl overflow-hidden">
                     <Editor
                         height="100%"
-                        defaultLanguage="javascript"
+                        language={selectedLanguage}
                         theme="vs-dark"
                         value={code}
                         onChange={(value) => setCode(value || "")}

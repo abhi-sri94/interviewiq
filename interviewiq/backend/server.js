@@ -11,6 +11,7 @@ const require = createRequire(import.meta.url);
 const pdfParse = require("pdf-parse");
 import User from "./models/User.js";
 import Job from "./models/Job.js";
+import Interview from "./models/Interview.js";
 
 dotenv.config();
 console.log("KEY =", process.env.GEMINI_API_KEY);
@@ -287,6 +288,8 @@ Can you explain dependency arrays in more detail?
 app.get("/generate-coding-question", async (req, res) => {
     try {
         const role = req.query.role || "Frontend React Developer";
+        const language = req.query.language || "javascript";
+
         const response = await fetch(
             `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${process.env.GEMINI_API_KEY}`,
             {
@@ -299,23 +302,21 @@ app.get("/generate-coding-question", async (req, res) => {
                         {
                             parts: [
                                 {
-
                                     text: `
-Generate one random ${role} coding interview question.
+Generate one random coding interview question designed for a ${role} role.
+The programming language required is: ${language}.
 
-Return ONLY valid JSON in this format:
-
+Return ONLY a valid JSON object in this format:
 {
   "title": "Question title",
-  "question": "Problem statement",
-  "starterCode": "function solve() {}"
+  "question": "Problem statement and description",
+  "starterCode": "starter code template suited exactly for ${language}",
+  "expectedKeywords": ["list", "of", "keywords", "required", "in", "the", "user", "code", "solution"]
 }
 
 Do not use markdown.
 Do not use triple backticks.
 `
-
-
                                 },
                             ],
                         },
@@ -325,7 +326,6 @@ Do not use triple backticks.
         );
 
         const data = await response.json();
-
         console.log(data);
 
         const text =
@@ -335,33 +335,61 @@ Do not use triple backticks.
 
         const cleanJson = text
             .replace(/```json/g, "")
-            .replace(/```/g, "");
+            .replace(/```/g, "")
+            .trim();
 
-        if (!cleanJson || cleanJson.trim() === "") {
-            return res.json({
-                title,
-                question,
-                starterCode,
-                expectedKeywords: [
-                    "addEventListener",
-                    "includes",
-                    "style.display"
-                ]
-            });
+        const defaultQuestions = {
+            javascript: {
+                title: "Reverse a String",
+                question: "Write a function to reverse a string in JavaScript.",
+                starterCode: "function reverseString(str) {\n  return str;\n}",
+                expectedKeywords: ["split", "reverse", "join"]
+            },
+            python: {
+                title: "Reverse a String",
+                question: "Write a function to reverse a string in Python.",
+                starterCode: "def reverse_string(s):\n    return s",
+                expectedKeywords: ["def", "return"]
+            },
+            java: {
+                title: "Reverse a String",
+                question: "Write a class method to reverse a string in Java.",
+                starterCode: "public class Solution {\n    public static String reverseString(String s) {\n        return s;\n    }\n}",
+                expectedKeywords: ["class", "String", "return"]
+            }
+        };
+
+        if (!cleanJson || cleanJson === "") {
+            return res.json(defaultQuestions[language.toLowerCase()] || defaultQuestions.javascript);
         }
 
         const parsed = JSON.parse(cleanJson);
-
         res.json(parsed);
 
     } catch (error) {
         console.log(error);
-        res.status(500).json({
-            title: "Error",
-            question: error.message,
-            starterCode: ""
-        });
-
+        const language = req.query.language || "javascript";
+        const defaultQuestions = {
+            javascript: {
+                title: "Reverse a String",
+                question: "Write a function to reverse a string in JavaScript.",
+                starterCode: "function reverseString(str) {\n  return str;\n}",
+                expectedKeywords: ["split", "reverse", "join"]
+            },
+            python: {
+                title: "Reverse a String",
+                question: "Write a function to reverse a string in Python.",
+                starterCode: "def reverse_string(s):\n    return s",
+                expectedKeywords: ["def", "return"]
+            },
+            java: {
+                title: "Reverse a String",
+                question: "Write a class method to reverse a string in Java.",
+                starterCode: "public class Solution {\n    public static String reverseString(String s) {\n        return s;\n    }\n}",
+                expectedKeywords: ["class", "String", "return"]
+            }
+        };
+        res.json(defaultQuestions[language.toLowerCase()] || defaultQuestions.javascript);
     }
 });
 
@@ -449,6 +477,32 @@ app.delete("/api/jobs/:id", authMiddleware, async (req, res) => {
     try {
         await Job.findOneAndDelete({ _id: req.params.id, userId: req.userId });
         res.json({ message: "Job deleted" });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// --- Interview History Routes ---
+app.post("/api/interviews", authMiddleware, async (req, res) => {
+    try {
+        const { role, averagePerformance, history } = req.body;
+        const newInterview = new Interview({
+            userId: req.userId,
+            role,
+            averagePerformance,
+            history
+        });
+        await newInterview.save();
+        res.json(newInterview);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+app.get("/api/interviews", authMiddleware, async (req, res) => {
+    try {
+        const interviews = await Interview.find({ userId: req.userId }).sort({ createdAt: -1 });
+        res.json(interviews);
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
