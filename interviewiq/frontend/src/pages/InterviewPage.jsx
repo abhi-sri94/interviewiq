@@ -2,7 +2,7 @@ import { motion } from "framer-motion";
 import { useState, useEffect, useRef } from "react";
 import { TypeAnimation } from "react-type-animation";
 import Editor from "@monaco-editor/react";
-import { FiMic, FiMicOff, FiVideo, FiVideoOff } from "react-icons/fi";
+import { FiMic, FiMicOff } from "react-icons/fi";
 import { FaRobot, FaUserCircle } from "react-icons/fa";
 import { BiCodeAlt } from "react-icons/bi";
 import { Link, useLocation } from "react-router-dom";
