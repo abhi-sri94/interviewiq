@@ -20,6 +20,7 @@ function InterviewPage() {
     const [timeLeft, setTimeLeft] = useState(600); // 10 minutes
     const [interviewHistory, setInterviewHistory] = useState([]);
     const [showReport, setShowReport] = useState(false);
+    const recognitionRef = useRef(null);
 
     const runCode = async () => {
         if (!code.trim()) {
@@ -524,11 +525,16 @@ function InterviewPage() {
                         )}
                     </div>
                     <div className="flex gap-4 w-full md:w-auto">
-                        <button className="flex-1 md:flex-none justify-center bg-slate-800 px-6 py-3 rounded-2xl flex items-center gap-2 hover:bg-slate-700 transition">
-                            <FiMic className="text-xl" /> Mic On
-                        </button>
-                        <button className="flex-1 md:flex-none justify-center bg-slate-800 px-6 py-3 rounded-2xl flex items-center gap-2 hover:bg-slate-700 transition">
-                            <FiVideo className="text-xl" /> Camera On
+                        <button
+                            onClick={isListening ? stopListening : startListening}
+                            className={`flex-1 md:flex-none justify-center px-6 py-3 rounded-2xl flex items-center gap-2 transition font-bold active:scale-95 ${
+                                isListening
+                                    ? "bg-red-500 hover:bg-red-600 text-white shadow-lg shadow-red-500/20"
+                                    : "bg-slate-800 hover:bg-slate-700 text-white"
+                            }`}
+                        >
+                            {isListening ? <FiMicOff className="text-xl" /> : <FiMic className="text-xl" />}
+                            {isListening ? "Stop Mic" : "Start Mic"}
                         </button>
                     </div>
                 </div>
