@@ -635,7 +635,7 @@ function InterviewPage() {
                         </div>
 
                         {/* Footer Controls */}
-                        <div className="flex flex-wrap items-center gap-4 mt-4 p-6 bg-slate-900/30 border border-white/5 rounded-[2rem] backdrop-blur-sm">
+                        <div className="flex flex-col sm:flex-row sm:flex-wrap items-stretch sm:items-center gap-4 mt-4 p-4 sm:p-6 bg-slate-900/30 border border-white/5 rounded-[2rem] backdrop-blur-sm">
                             <button
                                 onClick={async () => {
                                     try {
@@ -677,14 +677,14 @@ function InterviewPage() {
                                         setLoading(false);
                                     }
                                 }}
-                                className="bg-cyan-500 hover:bg-cyan-600 text-white px-8 py-4 rounded-xl font-bold transition shadow-lg shadow-cyan-500/20 active:scale-95"
+                                className="bg-cyan-500 hover:bg-cyan-600 text-white px-8 py-4 rounded-xl font-bold transition shadow-lg shadow-cyan-500/20 active:scale-95 w-full sm:w-auto text-center"
                             >
                                 Submit Answer
                             </button>
 
                             <button
                                 onClick={isListening ? stopListening : startListening}
-                                className={`px-8 py-4 rounded-xl font-bold flex items-center gap-2 transition active:scale-95 ${isListening
+                                className={`px-8 py-4 rounded-xl font-bold flex items-center justify-center gap-2 transition active:scale-95 w-full sm:w-auto text-center ${isListening
                                     ? "bg-red-500 hover:bg-red-600 shadow-lg shadow-red-500/20"
                                     : "bg-purple-600 hover:bg-purple-700 shadow-lg shadow-purple-500/20 text-white"
                                 }`}
@@ -695,7 +695,7 @@ function InterviewPage() {
 
                             <button
                                 onClick={nextQuestion}
-                                className="px-8 py-4 border border-white/10 hover:border-cyan-400 hover:bg-cyan-400/10 rounded-xl transition text-white font-bold active:scale-95"
+                                className="px-8 py-4 border border-white/10 hover:border-cyan-400 hover:bg-cyan-400/10 rounded-xl transition text-white font-bold active:scale-95 w-full sm:w-auto text-center"
                             >
                                 Next Question
                             </button>
@@ -703,17 +703,17 @@ function InterviewPage() {
                             <button
                                 onClick={startCodingRound}
                                 disabled={isFetchingCode}
-                                className="bg-yellow-500 hover:bg-yellow-600 text-slate-900 px-8 py-4 rounded-xl font-bold flex items-center gap-2 transition disabled:opacity-50 active:scale-95"
+                                className="bg-yellow-500 hover:bg-yellow-600 text-slate-900 px-8 py-4 rounded-xl font-bold flex items-center justify-center gap-2 transition disabled:opacity-50 active:scale-95 w-full sm:w-auto text-center"
                             >
                                 {isFetchingCode ? <span className="animate-spin text-xl">⏳</span> : <BiCodeAlt className="text-xl" />}
                                 Coding Round
                             </button>
 
-                            <div className="flex-1"></div>
+                            <div className="hidden sm:block flex-1"></div>
 
                             <button
                                 onClick={() => setShowReport(true)}
-                                className="px-6 py-3 text-red-400 hover:text-red-300 font-semibold transition"
+                                className="px-6 py-3 text-red-400 hover:text-red-300 font-semibold transition w-full sm:w-auto text-center"
                             >
                                 End Interview
                             </button>

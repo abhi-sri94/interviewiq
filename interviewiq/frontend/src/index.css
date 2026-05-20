@@ -1,7 +1,13 @@
 @import "tailwindcss";
 
 html {
-  font-size: 115%; /* Makes everything ~1.2x bigger */
+  font-size: 100%; /* Default mobile-friendly font size */
+}
+
+@media (min-width: 768px) {
+  html {
+    font-size: 115%; /* Desktop scale */
+  }
 }
 
 body {

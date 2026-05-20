@@ -30,7 +30,7 @@ function HomePage() {
                     initial={{ opacity: 0, y: 40 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.8 }}
-                    className="text-4xl sm:text-5xl md:text-7xl font-black leading-tight max-w-5xl"
+                    className="text-3xl sm:text-5xl md:text-7xl font-black leading-tight max-w-5xl"
                 >
                     Crack Your Next
                     <span className="text-cyan-400"> Tech Interview </span>
@@ -132,7 +132,7 @@ function HomePage() {
                     </p>
                 </div>
 
-                <div className="grid md:grid-cols-3 gap-8">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
 
                     {/* Card 1 */}
                     <motion.div
@@ -208,7 +208,7 @@ function HomePage() {
                         </p>
                     </div>
 
-                    <div className="grid md:grid-cols-3 gap-10">
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
 
                         {/* Step 1 */}
                         <div className="relative bg-slate-900 border border-slate-800 rounded-3xl p-10">
