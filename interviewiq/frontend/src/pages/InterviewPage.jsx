@@ -215,7 +215,7 @@ function InterviewPage() {
 
         recognitionRef.current = recognition;
 
-        recognition.continuous = true;
+        recognition.continuous = false; // Disable continuous mode to prevent Android/iOS browser duplication
         recognition.interimResults = true;
         recognition.lang = "en-US";
 
@@ -239,7 +239,6 @@ function InterviewPage() {
                 }
             }
 
-            currentSessionFinalRef.current = finalSessionTranscript;
             setAnswer(accumulatedTranscriptRef.current + finalSessionTranscript + interimSessionTranscript);
         };
 
@@ -249,9 +248,11 @@ function InterviewPage() {
 
         recognition.onend = () => {
             if (recognitionRef.current) {
-                // Save the final transcript from the ended session to the accumulator
-                accumulatedTranscriptRef.current += currentSessionFinalRef.current;
-                currentSessionFinalRef.current = "";
+                // Safely read the freshest state value using a functional updater to avoid stale closure issues
+                setAnswer((prevAnswer) => {
+                    accumulatedTranscriptRef.current = prevAnswer ? (prevAnswer.trim() + " ") : "";
+                    return prevAnswer;
+                });
                 try {
                     recognition.start();
                 } catch (e) {
