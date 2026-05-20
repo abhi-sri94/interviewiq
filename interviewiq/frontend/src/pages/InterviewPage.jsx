@@ -456,7 +456,7 @@ function InterviewPage() {
                     </div>
                 </div>
 
-                <div className="w-full h-[400px] border border-slate-700 rounded-2xl overflow-hidden">
+                <div className="w-full h-[320px] md:h-[400px] border border-slate-700 rounded-2xl overflow-hidden">
                     <Editor
                         height="100%"
                         language={selectedLanguage}
@@ -619,7 +619,7 @@ function InterviewPage() {
                         {/* Interactive Area: Transcript & AI Feedback */}
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                             {/* User Transcript Area */}
-                            <div className="bg-slate-800 rounded-3xl p-8 border border-slate-700 h-[450px] flex flex-col">
+                            <div className="bg-slate-800 rounded-3xl p-8 border border-slate-700 h-[300px] md:h-[450px] flex flex-col">
                                 <div className="flex items-center gap-4 mb-6">
                                     <div className="w-12 h-12 rounded-full bg-cyan-500 flex items-center justify-center text-xl">
                                         <FaUserCircle className="text-white" />
@@ -638,7 +638,7 @@ function InterviewPage() {
                             </div>
 
                             {/* AI Live Feedback Area */}
-                            <div className="bg-slate-800 rounded-3xl p-8 border border-slate-700 h-[450px] flex flex-col">
+                            <div className="bg-slate-800 rounded-3xl p-8 border border-slate-700 h-[300px] md:h-[450px] flex flex-col">
                                 <div className="flex items-center gap-4 mb-6">
                                     <div className={`w-12 h-12 rounded-full bg-purple-500 flex items-center justify-center text-xl ${loading ? "animate-pulse shadow-[0_0_15px_rgba(168,85,247,0.5)]" : ""}`}>
                                         <FaRobot className="text-white" />
