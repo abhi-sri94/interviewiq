@@ -21,6 +21,8 @@ function InterviewPage() {
     const [interviewHistory, setInterviewHistory] = useState([]);
     const [showReport, setShowReport] = useState(false);
     const recognitionRef = useRef(null);
+    const accumulatedTranscriptRef = useRef("");
+    const currentSessionFinalRef = useRef("");
 
     const runCode = async () => {
         if (!code.trim()) {
@@ -173,6 +175,8 @@ function InterviewPage() {
     const nextQuestion = async () => {
         setQuestionCount(prev => prev + 1);
         setAnswer("");
+        accumulatedTranscriptRef.current = "";
+        currentSessionFinalRef.current = "";
         setFeedback("");
         setFollowUpQuestion("");
         setTimeLeft(600);
@@ -215,20 +219,28 @@ function InterviewPage() {
         recognition.interimResults = true;
         recognition.lang = "en-US";
 
-        recognition.start();
+        // Store the baseline answer that is already in the state
+        accumulatedTranscriptRef.current = answer ? (answer.trim() + " ") : "";
+        currentSessionFinalRef.current = "";
 
-        recognitionRef.current = recognition;
+        recognition.start();
 
         setIsListening(true);
 
         recognition.onresult = (event) => {
-            let transcript = "";
+            let finalSessionTranscript = "";
+            let interimSessionTranscript = "";
 
             for (let i = 0; i < event.results.length; i++) {
-                transcript += event.results[i][0].transcript + " ";
+                if (event.results[i].isFinal) {
+                    finalSessionTranscript += event.results[i][0].transcript + " ";
+                } else {
+                    interimSessionTranscript += event.results[i][0].transcript;
+                }
             }
 
-            setAnswer(transcript);
+            currentSessionFinalRef.current = finalSessionTranscript;
+            setAnswer(accumulatedTranscriptRef.current + finalSessionTranscript + interimSessionTranscript);
         };
 
         recognition.onerror = (event) => {
@@ -237,7 +249,14 @@ function InterviewPage() {
 
         recognition.onend = () => {
             if (recognitionRef.current) {
-                recognition.start();
+                // Save the final transcript from the ended session to the accumulator
+                accumulatedTranscriptRef.current += currentSessionFinalRef.current;
+                currentSessionFinalRef.current = "";
+                try {
+                    recognition.start();
+                } catch (e) {
+                    console.log("Failed to restart recognition:", e);
+                }
             }
         };
     };
