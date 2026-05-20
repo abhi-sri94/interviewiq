@@ -423,11 +423,11 @@ function InterviewPage() {
     if (codingMode && currentCodingQuestion) {
         return (
             <div className="min-h-screen bg-[#020617] text-white p-6 md:p-10">
-                <div className="flex items-center justify-between mb-6">
-                    <h1 className="text-3xl md:text-4xl font-bold">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+                    <h1 className="text-2xl md:text-4xl font-bold">
                         {currentCodingQuestion.title}
                     </h1>
-                    <div className={`px-4 py-2 rounded-full font-mono text-2xl font-bold border ${timeLeft <= 60 ? 'bg-red-500/20 text-red-400 border-red-500 animate-pulse' : 'bg-slate-800 text-cyan-400 border-slate-700'}`}>
+                    <div className={`px-4 py-2 rounded-full font-mono text-xl md:text-2xl font-bold border w-fit ${timeLeft <= 60 ? 'bg-red-500/20 text-red-400 border-red-500 animate-pulse' : 'bg-slate-800 text-cyan-400 border-slate-700'}`}>
                         ⏱ {formatTime(timeLeft)}
                     </div>
                 </div>
@@ -436,7 +436,7 @@ function InterviewPage() {
                     {currentCodingQuestion.question}
                 </p>
 
-                <div className="flex justify-between items-center mb-4">
+                <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-4">
                     <h2 className="text-xl font-bold text-slate-300">Code Workspace</h2>
                     <div className="flex items-center gap-3">
                         <span className="text-sm text-slate-400 font-medium">Language:</span>
