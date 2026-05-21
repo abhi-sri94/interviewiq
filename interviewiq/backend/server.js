@@ -181,7 +181,7 @@ app.get("/generate-question", async (req, res) => {
                         {
                             parts: [
                                 {
-                                    text: `Generate one single ${role} interview question. The question MUST be strictly conversational, direct, and under 2 sentences maximum. Do not add any introductory or concluding text, just output the question itself.`
+                                    text: `Generate one single interview question for a candidate applying for the role of ${role}. To ensure a realistic and comprehensive interview, randomly choose to generate EITHER a deep technical role-specific question OR a behavioral/situational question (focusing on teamwork, conflict resolution, problem-solving, cultural fit, or career goals). The question MUST be conversational, direct, and under 2 sentences maximum. Do not add any introductory or concluding text, just output the question itself.`
                                 }
                             ]
                         }

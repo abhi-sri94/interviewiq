@@ -649,7 +649,18 @@ function InterviewPage() {
                                     </div>
                                 </div>
                                 <div className="flex-1 overflow-y-auto text-slate-300 whitespace-pre-line leading-relaxed text-base italic scrollbar-hide">
-                                    {feedback || "I'm listening... Give your best answer and click 'Submit' for analysis."}
+                                    {loading ? (
+                                        <div className="space-y-4 py-2">
+                                            <div className="h-4 bg-slate-700/60 rounded-lg w-3/4 animate-pulse"></div>
+                                            <div className="h-4 bg-slate-700/60 rounded-lg w-5/6 animate-pulse"></div>
+                                            <div className="h-4 bg-slate-700/60 rounded-lg w-2/3 animate-pulse"></div>
+                                            <p className="text-cyan-400/60 text-xs font-mono tracking-wider mt-4 not-italic">
+                                                AI is evaluating accuracy, confidence, and communication style...
+                                            </p>
+                                        </div>
+                                    ) : (
+                                        feedback || "I'm listening... Give your best answer and click 'Submit' for analysis."
+                                    )}
                                 </div>
                             </div>
                         </div>
