@@ -32,47 +32,6 @@ InterviewIQ is an advanced mock interview simulator designed to help developers,
 
 ## 🚀 Getting Started
 
-### Prerequisites
-- Node.js (v18+)
-- A Google Gemini API Key
-
-### Installation
-
-1. **Clone the repository:**
-   ```bash
-   git clone https://github.com/abhi-sri94/interviewiq-backend.git
-   cd interviewiq-backend
-   ```
-
-2. **Setup the Backend:**
-   ```bash
-   cd interviewiq/backend
-   npm install
-   ```
-   Create a `.env` file in the backend directory and add your API key:
-   ```env
-   GEMINI_API_KEY=your_gemini_api_key_here
-   ```
-   Start the backend server:
-   ```bash
-   npm run dev
-   ```
-
-3. **Setup the Frontend:**
-   ```bash
-   cd ../frontend
-   npm install
-   ```
-   Start the frontend development server:
-   ```bash
-   npm run dev
-   ```
-
-4. **Open your browser:**
-   Navigate to `http://localhost:5173` to see the app running locally!
 
 ## 🔐 Security Note
 Unlike typical frontend IDE clones that evaluate code insecurely in the browser, InterviewIQ utilizes the external **Piston API** to run JavaScript code inside a sandboxed environment, preventing Cross-Site Scripting (XSS) vulnerabilities.
-
-## 📄 License
-This project is open-source and available under the MIT License.
