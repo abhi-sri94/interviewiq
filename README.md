@@ -1,6 +1,6 @@
 # 🚀 InterviewIQ: AI-Powered Interview Simulator
 
-![InterviewIQ Demo](https://interviewiq-frontend.vercel.app/favicon.svg)
+![InterviewIQ Demo]
 
 **Live Demo:** [interviewiq-frontend.vercel.app](https://interviewiq-frontend.vercel.app)
 
