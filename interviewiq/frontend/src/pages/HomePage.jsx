@@ -135,13 +135,13 @@ function HomePage() {
                     </p>
                 </div>
 
-                <div className="flex flex-row overflow-x-auto snap-x snap-mandatory gap-6 pb-6 md:pb-0 md:grid md:grid-cols-3 md:gap-8 md:overflow-x-visible scrollbar-none px-4 md:px-0">
+                <div className="flex flex-row overflow-x-auto snap-x snap-mandatory gap-6 pb-6 lg:pb-0 lg:grid lg:grid-cols-3 lg:gap-8 lg:overflow-x-visible scrollbar-none px-4 lg:px-0">
 
                     {/* Card 1 */}
                     <motion.div
                         whileHover={{ y: -10, scale: 1.02 }}
                         transition={{ type: "spring", stiffness: 200 }}
-                        className="snap-center shrink-0 w-[85%] md:w-auto bg-slate-900/70 border border-slate-800 rounded-2xl md:rounded-3xl p-6 md:p-8 hover:border-cyan-500 transition-all duration-300"
+                        className="snap-center shrink-0 w-[85%] sm:w-[48%] lg:w-auto bg-slate-900/70 border border-slate-800 rounded-2xl md:rounded-3xl p-6 md:p-8 hover:border-cyan-500 transition-all duration-300"
                     >
                         <div className="text-4xl md:text-5xl mb-4 md:mb-6">🎤</div>
 
@@ -159,7 +159,7 @@ function HomePage() {
                     <motion.div
                         whileHover={{ y: -10, scale: 1.02 }}
                         transition={{ type: "spring", stiffness: 200 }}
-                        className="snap-center shrink-0 w-[85%] md:w-auto bg-slate-900/70 border border-slate-800 rounded-2xl md:rounded-3xl p-6 md:p-8 hover:border-cyan-500 transition-all duration-300"
+                        className="snap-center shrink-0 w-[85%] sm:w-[48%] lg:w-auto bg-slate-900/70 border border-slate-800 rounded-2xl md:rounded-3xl p-6 md:p-8 hover:border-cyan-500 transition-all duration-300"
                     >
                         <div className="text-4xl md:text-5xl mb-4 md:mb-6">📊</div>
 
@@ -177,7 +177,7 @@ function HomePage() {
                     <motion.div
                         whileHover={{ y: -10, scale: 1.02 }}
                         transition={{ type: "spring", stiffness: 200 }}
-                        className="snap-center shrink-0 w-[85%] md:w-auto bg-slate-900/70 border border-slate-800 rounded-2xl md:rounded-3xl p-6 md:p-8 hover:border-cyan-500 transition-all duration-300"
+                        className="snap-center shrink-0 w-[85%] sm:w-[48%] lg:w-auto bg-slate-900/70 border border-slate-800 rounded-2xl md:rounded-3xl p-6 md:p-8 hover:border-cyan-500 transition-all duration-300"
                     >
                         <div className="text-4xl md:text-5xl mb-4 md:mb-6">💼</div>
 
@@ -211,10 +211,10 @@ function HomePage() {
                         </p>
                     </div>
 
-                    <div className="flex flex-row overflow-x-auto snap-x snap-mandatory gap-6 pb-6 pt-5 md:pt-0 md:pb-0 md:grid md:grid-cols-3 md:gap-10 md:overflow-x-visible scrollbar-none px-4 md:px-0">
+                    <div className="flex flex-row overflow-x-auto snap-x snap-mandatory gap-6 pb-6 pt-5 lg:pt-0 lg:pb-0 lg:grid lg:grid-cols-3 lg:gap-10 lg:overflow-x-visible scrollbar-none px-4 lg:px-0">
 
                         {/* Step 1 */}
-                        <div className="snap-center shrink-0 w-[85%] md:w-auto relative bg-slate-900 border border-slate-800 rounded-2xl md:rounded-3xl p-6 md:p-10">
+                        <div className="snap-center shrink-0 w-[85%] sm:w-[48%] lg:w-auto relative bg-slate-900 border border-slate-800 rounded-2xl md:rounded-3xl p-6 md:p-10">
 
                             <div className="absolute -top-5 left-6 md:left-8 bg-cyan-500 text-black w-10 h-10 md:w-12 md:h-12 rounded-full flex items-center justify-center font-bold text-lg md:text-xl">
                                 1
@@ -232,7 +232,7 @@ function HomePage() {
                         </div>
 
                         {/* Step 2 */}
-                        <div className="snap-center shrink-0 w-[85%] md:w-auto relative bg-slate-900 border border-slate-800 rounded-2xl md:rounded-3xl p-6 md:p-10">
+                        <div className="snap-center shrink-0 w-[85%] sm:w-[48%] lg:w-auto relative bg-slate-900 border border-slate-800 rounded-2xl md:rounded-3xl p-6 md:p-10">
 
                             <div className="absolute -top-5 left-6 md:left-8 bg-cyan-500 text-black w-10 h-10 md:w-12 md:h-12 rounded-full flex items-center justify-center font-bold text-lg md:text-xl">
                                 2
@@ -250,7 +250,7 @@ function HomePage() {
                         </div>
 
                         {/* Step 3 */}
-                        <div className="snap-center shrink-0 w-[85%] md:w-auto relative bg-slate-900 border border-slate-800 rounded-2xl md:rounded-3xl p-6 md:p-10">
+                        <div className="snap-center shrink-0 w-[85%] sm:w-[48%] lg:w-auto relative bg-slate-900 border border-slate-800 rounded-2xl md:rounded-3xl p-6 md:p-10">
 
                             <div className="absolute -top-5 left-6 md:left-8 bg-cyan-500 text-black w-10 h-10 md:w-12 md:h-12 rounded-full flex items-center justify-center font-bold text-lg md:text-xl">
                                 3
