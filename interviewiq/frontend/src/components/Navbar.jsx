@@ -5,10 +5,10 @@ function Navbar() {
     const { user, logout } = useAuth();
 
     return (
-        <nav className="w-full flex items-center justify-between px-6 md:px-10 py-4 md:py-5 border-b border-slate-800 bg-[#020617]/80 backdrop-blur-md sticky top-0 z-50">
+        <nav className="w-full flex items-center justify-between px-4 md:px-10 py-3 md:py-5 border-b border-slate-800 bg-[#020617]/80 backdrop-blur-md sticky top-0 z-50">
             {/* Logo */}
             <Link to={user ? "/dashboard" : "/"}>
-                <h1 className="text-2xl md:text-3xl font-black text-cyan-400 cursor-pointer tracking-tight">
+                <h1 className="text-xl md:text-3xl font-black text-cyan-400 cursor-pointer tracking-tight">
                     InterviewIQ
                 </h1>
             </Link>

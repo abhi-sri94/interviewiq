@@ -319,23 +319,23 @@ function InterviewPage() {
 
     if (showReport) {
         return (
-            <div className="min-h-screen bg-slate-100 print:bg-white text-slate-900 p-8 md:p-16">
+            <div className="min-h-screen bg-slate-100 print:bg-white text-slate-900 p-4 md:p-16">
                 <div className="max-w-4xl mx-auto">
 
-                    <div className="flex justify-between items-end mb-12 border-b-2 border-slate-300 pb-6 print:border-black">
+                    <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end mb-8 md:mb-12 border-b-2 border-slate-300 pb-6 print:border-black gap-4">
                         <div>
-                            <h1 className="text-4xl font-black text-cyan-600 print:text-black">InterviewIQ Report</h1>
-                            <p className="text-xl text-slate-600 mt-2 font-medium">{role} Profile</p>
+                            <h1 className="text-3xl md:text-4xl font-black text-cyan-600 print:text-black">InterviewIQ Report</h1>
+                            <p className="text-lg md:text-xl text-slate-600 mt-1 md:mt-2 font-medium">{role} Profile</p>
                         </div>
-                        <div className="flex gap-4 print:hidden">
+                        <div className="flex gap-3 print:hidden w-full sm:w-auto">
                             <button
                                 onClick={() => window.print()}
-                                className="bg-cyan-600 hover:bg-cyan-700 text-white px-6 py-3 rounded-xl font-bold shadow-lg transition"
+                                className="flex-1 sm:flex-none bg-cyan-600 hover:bg-cyan-700 text-white px-4 py-2.5 rounded-xl font-bold shadow-lg transition text-sm md:text-base"
                             >
                                 🖨️ Save as PDF
                             </button>
-                            <Link to="/">
-                                <button className="bg-slate-800 hover:bg-slate-900 text-white px-6 py-3 rounded-xl font-bold transition">
+                            <Link to="/" className="flex-1 sm:flex-none">
+                                <button className="w-full bg-slate-800 hover:bg-slate-900 text-white px-4 py-2.5 rounded-xl font-bold transition text-sm md:text-base">
                                     Exit
                                 </button>
                             </Link>
@@ -347,8 +347,8 @@ function InterviewPage() {
                     ) : (
                         <div className="space-y-12">
                             {interviewHistory.map((item, index) => (
-                                <div key={index} className="bg-white p-8 rounded-2xl shadow-sm border border-slate-200 print:shadow-none print:border-black print:border-b-4 print:mb-12 page-break-inside-avoid">
-                                    <div className="flex items-center gap-3 mb-6">
+                                <div key={index} className="bg-white p-5 md:p-8 rounded-2xl shadow-sm border border-slate-200 print:shadow-none print:border-black print:border-b-4 print:mb-12 page-break-inside-avoid">
+                                    <div className="flex items-center gap-3 mb-4 md:mb-6">
                                         <span className="bg-cyan-100 text-cyan-800 font-bold px-3 py-1 rounded-full text-sm">
                                             Q{index + 1}
                                         </span>
@@ -422,17 +422,17 @@ function InterviewPage() {
 
     if (codingMode && currentCodingQuestion) {
         return (
-            <div className="min-h-screen bg-[#020617] text-white p-6 md:p-10">
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
-                    <h1 className="text-2xl md:text-4xl font-bold">
+            <div className="min-h-screen bg-[#020617] text-white p-4 md:p-10">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4 md:mb-6">
+                    <h1 className="text-xl md:text-4xl font-bold">
                         {currentCodingQuestion.title}
                     </h1>
-                    <div className={`px-4 py-2 rounded-full font-mono text-xl md:text-2xl font-bold border w-fit ${timeLeft <= 60 ? 'bg-red-500/20 text-red-400 border-red-500 animate-pulse' : 'bg-slate-800 text-cyan-400 border-slate-700'}`}>
+                    <div className={`px-3 py-1.5 rounded-full font-mono text-lg md:text-2xl font-bold border w-fit ${timeLeft <= 60 ? 'bg-red-500/20 text-red-400 border-red-500 animate-pulse' : 'bg-slate-800 text-cyan-400 border-slate-700'}`}>
                         ⏱ {formatTime(timeLeft)}
                     </div>
                 </div>
 
-                <p className="text-slate-300 mb-6">
+                <p className="text-slate-300 text-sm md:text-base mb-4 md:mb-6">
                     {currentCodingQuestion.question}
                 </p>
 
@@ -456,7 +456,7 @@ function InterviewPage() {
                     </div>
                 </div>
 
-                <div className="w-full h-[320px] md:h-[400px] border border-slate-700 rounded-2xl overflow-hidden">
+                <div className="w-full h-[260px] md:h-[400px] border border-slate-700 rounded-2xl overflow-hidden">
                     <Editor
                         height="100%"
                         language={selectedLanguage}
@@ -465,21 +465,21 @@ function InterviewPage() {
                         onChange={(value) => setCode(value || "")}
                         options={{
                             minimap: { enabled: false },
-                            fontSize: 16,
-                            padding: { top: 16 }
+                            fontSize: 14,
+                            padding: { top: 12 }
                         }}
                     />
                 </div>
 
-                <div className="flex flex-col md:flex-row gap-4 mt-6">
+                <div className="flex flex-wrap md:flex-row gap-3 mt-4 md:mt-6">
 
                     <button
                         onClick={runCode}
                         disabled={isRunningCode}
-                        className="bg-green-500 px-6 py-3 rounded-2xl w-full md:w-auto flex items-center justify-center gap-2 disabled:opacity-50"
+                        className="bg-green-500 px-4 py-2.5 rounded-xl md:rounded-2xl w-full md:w-auto flex items-center justify-center gap-2 disabled:opacity-50 text-sm md:text-base font-bold cursor-pointer"
                     >
                         {isRunningCode ? (
-                            <><span className="animate-spin text-xl">⏳</span> Running...</>
+                            <><span className="animate-spin text-lg">⏳</span> Running...</>
                         ) : (
                             "Run Code"
                         )}
@@ -488,22 +488,22 @@ function InterviewPage() {
                     <button
                         onClick={startCodingRound}
                         disabled={isFetchingCode}
-                        className="bg-yellow-500 px-6 py-3 rounded-2xl flex items-center justify-center gap-2 text-slate-900 disabled:opacity-50 w-full md:w-auto"
+                        className="bg-yellow-500 px-4 py-2.5 rounded-xl md:rounded-2xl flex items-center justify-center gap-2 text-slate-900 disabled:opacity-50 w-full md:w-auto text-sm md:text-base font-bold cursor-pointer"
                     >
                         {isFetchingCode ? (
                             <>
-                                <span className="animate-spin text-xl">⏳</span> Generating...
+                                <span className="animate-spin text-lg">⏳</span> Generating...
                             </>
                         ) : (
-                            "Next Coding Question"
+                            "Next Coding"
                         )}
                     </button>
 
                     <button
                         onClick={() => { setCodingMode(false); setShowReport(true); }}
-                        className="px-6 py-3 border border-purple-500 rounded-2xl hover:bg-purple-500/20 transition text-purple-400 font-semibold w-full md:w-auto"
+                        className="px-4 py-2.5 border border-purple-500 rounded-xl md:rounded-2xl hover:bg-purple-500/20 transition text-purple-400 font-bold w-full md:w-auto text-sm md:text-base cursor-pointer"
                     >
-                        End & View Report
+                        End & Report
                     </button>
 
                 </div>
@@ -514,21 +514,21 @@ function InterviewPage() {
 
     return (
         <div className="min-h-screen bg-[#020617] text-white flex flex-col">
-            <div className="flex-1 flex flex-col p-4 md:p-8">
+            <div className="flex-1 flex flex-col p-3 md:p-8">
                 {/* Top Navigation / Header */}
-                <div className="border-b border-slate-800 p-6 md:p-8 flex flex-col md:flex-row items-start md:items-center justify-between gap-6 print:hidden">
-                    <div>
-                        <div className="flex items-center gap-4">
-                            <h1 className="text-3xl md:text-4xl font-black text-white">Live Interview</h1>
-                            <div className={`px-4 py-1 rounded-full font-mono text-xl font-bold border ${timeLeft <= 60 ? 'bg-red-500/20 text-red-400 border-red-500 animate-pulse' : 'bg-slate-800 text-cyan-400 border-slate-700'}`}>
+                <div className="border-b border-slate-800 p-4 md:p-8 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 print:hidden">
+                    <div className="w-full">
+                        <div className="flex items-center justify-between md:justify-start gap-4">
+                            <h1 className="text-2xl md:text-4xl font-black text-white">Live Interview</h1>
+                            <div className={`px-3 py-1 rounded-full font-mono text-lg font-bold border ${timeLeft <= 60 ? 'bg-red-500/20 text-red-400 border-red-500 animate-pulse' : 'bg-slate-800 text-cyan-400 border-slate-700'}`}>
                                 ⏱ {formatTime(timeLeft)}
                             </div>
                         </div>
-                        <p className="text-slate-400 mt-2">Answer naturally and confidently.</p>
+                        <p className="text-slate-400 text-sm mt-1 md:mt-2">Answer naturally and confidently.</p>
                         {followUpQuestion && (
                             <div className="mt-4 p-4 bg-purple-900/30 border border-purple-500 rounded-2xl">
-                                <p className="text-purple-300 text-sm font-semibold mb-2">AI Follow-up Question</p>
-                                <p className="text-white text-lg">{followUpQuestion}</p>
+                                <p className="text-purple-300 text-xs font-semibold mb-1">AI Follow-up Question</p>
+                                <p className="text-white text-base md:text-lg">{followUpQuestion}</p>
                                 <button
                                     onClick={() => {
                                         setQuestion(followUpQuestion);
@@ -537,40 +537,40 @@ function InterviewPage() {
                                         setFeedback("");
                                         setTimeLeft(600);
                                     }}
-                                    className="mt-4 px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white text-sm font-bold rounded-xl transition shadow-lg"
+                                    className="mt-3 px-3 py-1.5 bg-purple-600 hover:bg-purple-700 text-white text-xs font-bold rounded-lg transition shadow-lg cursor-pointer"
                                 >
                                     Answer this Follow-up
                                 </button>
                             </div>
                         )}
                     </div>
-                    <div className="flex gap-4 w-full md:w-auto">
+                    <div className="flex gap-3 w-full md:w-auto mt-2 md:mt-0">
                         <button
                             onClick={isListening ? stopListening : startListening}
-                            className={`flex-1 md:flex-none justify-center px-6 py-3 rounded-2xl flex items-center gap-2 transition font-bold active:scale-95 ${
+                            className={`flex-1 md:flex-none justify-center px-4 py-2.5 rounded-xl flex items-center gap-2 transition font-bold text-sm md:text-base active:scale-95 cursor-pointer ${
                                 isListening
                                     ? "bg-red-500 hover:bg-red-600 text-white shadow-lg shadow-red-500/20"
                                     : "bg-slate-800 hover:bg-slate-700 text-white"
                             }`}
                         >
-                            {isListening ? <FiMicOff className="text-xl" /> : <FiMic className="text-xl" />}
+                            {isListening ? <FiMicOff className="text-lg" /> : <FiMic className="text-lg" />}
                             {isListening ? "Stop Mic" : "Start Mic"}
                         </button>
                     </div>
                 </div>
 
                 {/* Main Content Grid */}
-                <div className="flex-1 grid grid-cols-1 lg:grid-cols-12 gap-8 mt-6">
+                <div className="flex-1 grid grid-cols-1 lg:grid-cols-12 gap-4 md:gap-8 mt-4 md:mt-6">
                     {/* Left Sidebar: AI Interlocutor & Metrics */}
-                    <div className="lg:col-span-3 space-y-6 order-2 lg:order-1">
-                        <div className="bg-slate-900/50 border border-white/5 rounded-3xl p-6 backdrop-blur-xl text-center">
-                            <div className={`w-20 h-20 rounded-2xl bg-cyan-500/20 mx-auto flex items-center justify-center text-3xl mb-4 border border-cyan-500/30 transition-all duration-300 ${loading ? "shadow-[0_0_20px_rgba(6,182,212,0.4)] animate-pulse" : ""}`}>
+                    <div className="lg:col-span-3 space-y-4 md:space-y-6 order-2 lg:order-1">
+                        <div className="bg-slate-900/50 border border-white/5 rounded-2xl md:rounded-3xl p-4 md:p-6 backdrop-blur-xl text-center">
+                            <div className={`w-14 h-14 md:w-20 md:h-20 rounded-xl md:rounded-2xl bg-cyan-500/20 mx-auto flex items-center justify-center text-2xl md:text-3xl mb-3 md:mb-4 border border-cyan-500/30 transition-all duration-300 ${loading ? "shadow-[0_0_20px_rgba(6,182,212,0.4)] animate-pulse" : ""}`}>
                                 <FaRobot className="text-cyan-400" />
                             </div>
-                            <h2 className="text-lg font-bold text-white">AI Interviewer</h2>
-                            <p className="text-xs text-gray-500 mt-1 uppercase tracking-widest">{role}</p>
-                            <div className="mt-8 text-left">
-                                <div className="flex justify-between text-[10px] text-gray-500 mb-2 font-bold uppercase tracking-tighter">
+                            <h2 className="text-base md:text-lg font-bold text-white">AI Interviewer</h2>
+                            <p className="text-[10px] text-gray-500 mt-0.5 md:mt-1 uppercase tracking-widest">{role}</p>
+                            <div className="mt-4 md:mt-8 text-left">
+                                <div className="flex justify-between text-[9px] text-gray-500 mb-1.5 md:mb-2 font-bold uppercase tracking-tighter">
                                     <span>PROGRESS</span>
                                     <span>{progressPercentage}%</span>
                                 </div>
@@ -579,73 +579,73 @@ function InterviewPage() {
                                 </div>
                             </div>
                         </div>
-                        <div className="bg-slate-900/50 border border-white/5 rounded-3xl p-6 backdrop-blur-xl">
-                            <h3 className="text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-4">LIVE METRICS</h3>
-                            <div className="space-y-4">
-                                <div className="flex justify-between text-sm">
+                        <div className="bg-slate-900/50 border border-white/5 rounded-2xl md:rounded-3xl p-4 md:p-6 backdrop-blur-xl">
+                            <h3 className="text-[9px] font-bold text-gray-500 uppercase tracking-widest mb-3 md:mb-4">LIVE METRICS</h3>
+                            <div className="space-y-3 md:space-y-4">
+                                <div className="flex justify-between text-xs md:text-sm">
                                     <span className="text-gray-400">Technical</span>
-                                    <span className="text-cyan-400 font-mono">{technicalScore}%</span>
+                                    <span className="text-cyan-400 font-mono font-bold">{technicalScore}%</span>
                                 </div>
-                                <div className="flex justify-between text-sm">
+                                <div className="flex justify-between text-xs md:text-sm">
                                     <span className="text-gray-400">Communication</span>
-                                    <span className="text-purple-400 font-mono">{communicationScore}%</span>
+                                    <span className="text-purple-400 font-mono font-bold">{communicationScore}%</span>
                                 </div>
-                                <div className="flex justify-between text-sm">
+                                <div className="flex justify-between text-xs md:text-sm">
                                     <span className="text-gray-400">Confidence</span>
-                                    <span className="text-blue-400 font-mono">{confidenceScore}%</span>
+                                    <span className="text-blue-400 font-mono font-bold">{confidenceScore}%</span>
                                 </div>
                             </div>
                         </div>
                     </div>
 
                     {/* Right Panel: Question, Response, Feedback */}
-                    <div className="lg:col-span-9 space-y-6 order-1 lg:order-2">
+                    <div className="lg:col-span-9 space-y-4 md:space-y-6 order-1 lg:order-2">
                         {/* Question Card */}
                         <motion.div
                             initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
-                            className="bg-slate-900/80 border border-white/10 rounded-[2.5rem] p-8 md:p-12 shadow-2xl relative overflow-hidden"
+                            className="bg-slate-900/80 border border-white/10 rounded-2xl md:rounded-[2.5rem] p-5 md:p-12 shadow-2xl relative overflow-hidden"
                         >
                             <div className="absolute top-0 left-0 w-1 h-full bg-cyan-500 shadow-[0_0_15px_rgba(6,182,212,0.5)]"></div>
-                            <div className="flex items-center gap-2 mb-6">
+                            <div className="flex items-center gap-2 mb-4 md:mb-6">
                                 {isListening && <div className="w-2 h-2 bg-red-500 rounded-full animate-ping"></div>}
-                                <span className="text-cyan-400 text-xs font-bold uppercase tracking-[0.2em]">CURRENT QUESTION</span>
+                                <span className="text-cyan-400 text-[10px] md:text-xs font-bold uppercase tracking-[0.2em]">CURRENT QUESTION</span>
                             </div>
-                            <h2 className="text-2xl md:text-3xl font-bold leading-relaxed text-white">
+                            <h2 className="text-lg sm:text-xl md:text-3xl font-bold leading-relaxed text-white">
                                 <TypeAnimation key={question} sequence={[question]} wrapper="span" speed={70} repeat={0} />
                             </h2>
                         </motion.div>
 
                         {/* Interactive Area: Transcript & AI Feedback */}
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-8">
                             {/* User Transcript Area */}
-                            <div className="bg-slate-800 rounded-3xl p-8 border border-slate-700 h-[300px] md:h-[450px] flex flex-col">
-                                <div className="flex items-center gap-4 mb-6">
-                                    <div className="w-12 h-12 rounded-full bg-cyan-500 flex items-center justify-center text-xl">
+                            <div className="bg-slate-800 rounded-2xl md:rounded-3xl p-4 md:p-8 border border-slate-700 h-[200px] md:h-[450px] flex flex-col">
+                                <div className="flex items-center gap-3 mb-4 md:mb-6">
+                                    <div className="w-10 h-10 rounded-full bg-cyan-500 flex items-center justify-center text-lg">
                                         <FaUserCircle className="text-white" />
                                     </div>
                                     <div>
-                                        <h3 className="text-lg font-bold">Your Response</h3>
-                                        <p className="text-slate-400 text-xs uppercase tracking-widest">Live transcript</p>
+                                        <h3 className="text-base md:text-lg font-bold">Your Response</h3>
+                                        <p className="text-slate-400 text-[10px] uppercase tracking-widest">Live transcript</p>
                                     </div>
                                 </div>
                                 <textarea
                                     placeholder="Start speaking or type your answer here..."
                                     value={answer}
                                     onChange={(e) => setAnswer(e.target.value)}
-                                    className="flex-1 w-full bg-transparent outline-none resize-none text-slate-200 text-lg leading-relaxed font-light placeholder:text-slate-600"
+                                    className="flex-1 w-full bg-transparent outline-none resize-none text-slate-200 text-sm md:text-lg leading-relaxed font-light placeholder:text-slate-600"
                                 />
                             </div>
 
                             {/* AI Live Feedback Area */}
-                            <div className="bg-slate-800 rounded-3xl p-8 border border-slate-700 h-[300px] md:h-[450px] flex flex-col">
-                                <div className="flex items-center gap-4 mb-6">
-                                    <div className={`w-12 h-12 rounded-full bg-purple-500 flex items-center justify-center text-xl ${loading ? "animate-pulse shadow-[0_0_15px_rgba(168,85,247,0.5)]" : ""}`}>
+                            <div className="bg-slate-800 rounded-2xl md:rounded-3xl p-4 md:p-8 border border-slate-700 h-[200px] md:h-[450px] flex flex-col">
+                                <div className="flex items-center gap-3 mb-4 md:mb-6">
+                                    <div className={`w-10 h-10 rounded-full bg-purple-500 flex items-center justify-center text-lg ${loading ? "animate-pulse shadow-[0_0_15px_rgba(168,85,247,0.5)]" : ""}`}>
                                         <FaRobot className="text-white" />
                                     </div>
                                     <div>
-                                        <h3 className="text-lg font-bold">AI Analysis</h3>
-                                        <p className="text-slate-400 text-xs uppercase tracking-widest">{loading ? "Processing..." : "Real-time insights"}</p>
+                                        <h3 className="text-base md:text-lg font-bold">AI Analysis</h3>
+                                        <p className="text-slate-400 text-[10px] uppercase tracking-widest">{loading ? "Processing..." : "Real-time insights"}</p>
                                     </div>
                                 </div>
                                 <div className="flex-1 overflow-y-auto text-slate-300 whitespace-pre-line leading-relaxed text-base italic scrollbar-hide">
@@ -666,7 +666,7 @@ function InterviewPage() {
                         </div>
 
                         {/* Footer Controls */}
-                        <div className="flex flex-col sm:flex-row sm:flex-wrap items-stretch sm:items-center gap-4 mt-4 p-4 sm:p-6 bg-slate-900/30 border border-white/5 rounded-[2rem] backdrop-blur-sm">
+                        <div className="flex flex-wrap items-center gap-3 mt-4 p-4 bg-slate-900/30 border border-white/5 rounded-2xl md:rounded-[2rem] backdrop-blur-sm">
                             <button
                                 onClick={async () => {
                                     try {
@@ -708,25 +708,25 @@ function InterviewPage() {
                                         setLoading(false);
                                     }
                                 }}
-                                className="bg-cyan-500 hover:bg-cyan-600 text-white px-8 py-4 rounded-xl font-bold transition shadow-lg shadow-cyan-500/20 active:scale-95 w-full sm:w-auto text-center"
+                                className="bg-cyan-500 hover:bg-cyan-600 text-white px-4 py-2.5 rounded-xl font-bold transition shadow-lg shadow-cyan-500/20 active:scale-95 flex-1 sm:flex-none text-center text-sm md:px-8 md:py-4 md:text-base cursor-pointer"
                             >
                                 Submit Answer
                             </button>
 
                             <button
                                 onClick={isListening ? stopListening : startListening}
-                                className={`px-8 py-4 rounded-xl font-bold flex items-center justify-center gap-2 transition active:scale-95 w-full sm:w-auto text-center ${isListening
-                                    ? "bg-red-500 hover:bg-red-600 shadow-lg shadow-red-500/20"
+                                className={`px-4 py-2.5 rounded-xl font-bold flex items-center justify-center gap-2 transition active:scale-95 flex-1 sm:flex-none text-center text-sm md:px-8 md:py-4 md:text-base cursor-pointer ${isListening
+                                    ? "bg-red-500 hover:bg-red-600 shadow-lg shadow-red-500/20 text-white"
                                     : "bg-purple-600 hover:bg-purple-700 shadow-lg shadow-purple-500/20 text-white"
                                 }`}
                             >
-                                {isListening ? <FiMicOff className="text-xl" /> : <FiMic className="text-xl" />}
+                                {isListening ? <FiMicOff className="text-lg" /> : <FiMic className="text-lg" />}
                                 {isListening ? "Stop Mic" : "Start Mic"}
                             </button>
 
                             <button
                                 onClick={nextQuestion}
-                                className="px-8 py-4 border border-white/10 hover:border-cyan-400 hover:bg-cyan-400/10 rounded-xl transition text-white font-bold active:scale-95 w-full sm:w-auto text-center"
+                                className="px-4 py-2.5 border border-white/10 hover:border-cyan-400 hover:bg-cyan-400/10 rounded-xl transition text-white font-bold active:scale-95 flex-1 sm:flex-none text-center text-sm md:px-8 md:py-4 md:text-base cursor-pointer"
                             >
                                 Next Question
                             </button>
@@ -734,17 +734,17 @@ function InterviewPage() {
                             <button
                                 onClick={startCodingRound}
                                 disabled={isFetchingCode}
-                                className="bg-yellow-500 hover:bg-yellow-600 text-slate-900 px-8 py-4 rounded-xl font-bold flex items-center justify-center gap-2 transition disabled:opacity-50 active:scale-95 w-full sm:w-auto text-center"
+                                className="bg-yellow-500 hover:bg-yellow-600 text-slate-900 px-4 py-2.5 rounded-xl font-bold flex items-center justify-center gap-2 transition disabled:opacity-50 active:scale-95 flex-1 sm:flex-none text-center text-sm md:px-8 md:py-4 md:text-base cursor-pointer"
                             >
-                                {isFetchingCode ? <span className="animate-spin text-xl">⏳</span> : <BiCodeAlt className="text-xl" />}
+                                {isFetchingCode ? <span className="animate-spin text-lg">⏳</span> : <BiCodeAlt className="text-lg" />}
                                 Coding Round
                             </button>
 
-                            <div className="hidden sm:block flex-1"></div>
+                            <div className="hidden lg:block flex-1"></div>
 
                             <button
                                 onClick={() => setShowReport(true)}
-                                className="px-6 py-3 text-red-400 hover:text-red-300 font-semibold transition w-full sm:w-auto text-center"
+                                className="px-4 py-2 text-red-400 hover:text-red-300 font-semibold transition w-full lg:w-auto text-center text-xs md:text-sm cursor-pointer"
                             >
                                 End Interview
                             </button>

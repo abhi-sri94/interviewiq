@@ -43,7 +43,7 @@ function DashboardHome() {
     const uniqueRoles = new Set(interviews.map(i => i.role)).size;
 
     return (
-        <div className="p-6 md:p-12 relative overflow-hidden min-h-screen">
+        <div className="p-4 md:p-12 relative overflow-hidden min-h-screen">
             {/* Soft decorative background glows */}
             <div className="absolute top-10 right-10 w-[300px] h-[300px] bg-cyan-500/5 blur-[120px] rounded-full pointer-events-none"></div>
             <div className="absolute bottom-10 left-10 w-[300px] h-[300px] bg-purple-500/5 blur-[120px] rounded-full pointer-events-none"></div>
@@ -54,11 +54,11 @@ function DashboardHome() {
                 transition={{ duration: 0.6 }}
                 className="relative z-10"
             >
-                <div className="mb-10 md:mb-12">
-                    <h1 className="text-3xl md:text-5xl font-extrabold tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-white via-slate-100 to-slate-300 mb-4">
+                <div className="mb-6 md:mb-12">
+                    <h1 className="text-2xl sm:text-3xl md:text-5xl font-extrabold tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-white via-slate-100 to-slate-300 mb-2 md:mb-4">
                         Welcome Back, {user?.name?.split(' ')[0] || "Developer"} 👋
                     </h1>
-                    <p className="text-slate-400 text-base md:text-lg font-medium">
+                    <p className="text-slate-400 text-sm md:text-lg font-medium">
                         Ready for your next AI practice session? Choose a role and benchmark your technical skills.
                     </p>
                 </div>
@@ -148,9 +148,9 @@ function DashboardHome() {
                                         {/* Timeline Dot Indicator */}
                                         <div className="absolute -left-[29px] top-1.5 w-4 h-4 rounded-full bg-slate-950 border-2 border-slate-700 group-hover:border-cyan-400 group-hover:shadow-[0_0_10px_rgba(34,211,238,0.5)] transition-all duration-300 z-10"></div>
                                         
-                                        <div className="bg-slate-900/30 hover:bg-slate-900/50 border border-white/5 rounded-2xl p-5 md:p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4 transition-all duration-300">
+                                        <div className="bg-slate-900/30 hover:bg-slate-900/50 border border-white/5 rounded-2xl p-4 md:p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4 transition-all duration-300">
                                             <div>
-                                                <h3 className="text-xl font-bold text-white group-hover:text-cyan-400 transition-colors duration-300">
+                                                <h3 className="text-lg md:text-xl font-bold text-white group-hover:text-cyan-400 transition-colors duration-300">
                                                     {session.role}
                                                 </h3>
                                                 <div className="flex flex-wrap items-center gap-4 text-xs text-slate-500 font-semibold mt-2">

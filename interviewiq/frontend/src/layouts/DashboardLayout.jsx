@@ -43,31 +43,31 @@ function DashboardLayout() {
 
                 <div className="flex flex-col gap-3 md:gap-4">
                     <Link to="/dashboard" onClick={() => setIsOpen(false)}>
-                        <button className={`w-full py-4 rounded-2xl font-semibold transition ${isActive("/dashboard")}`}>
+                        <button className={`w-full py-3 md:py-4 rounded-2xl font-semibold transition ${isActive("/dashboard")}`}>
                             Dashboard
                         </button>
                     </Link>
 
                     <Link to="/dashboard/interview" onClick={() => setIsOpen(false)}>
-                        <button className={`w-full py-4 rounded-2xl font-semibold transition ${isActive("/dashboard/interview")}`}>
+                        <button className={`w-full py-3 md:py-4 rounded-2xl font-semibold transition ${isActive("/dashboard/interview")}`}>
                             Start Interview
                         </button>
                     </Link>
 
                     <Link to="/dashboard/resume" onClick={() => setIsOpen(false)}>
-                        <button className={`w-full py-4 rounded-2xl font-semibold transition ${isActive("/dashboard/resume")}`}>
+                        <button className={`w-full py-3 md:py-4 rounded-2xl font-semibold transition ${isActive("/dashboard/resume")}`}>
                             Resume Analyzer
                         </button>
                     </Link>
 
                     <Link to="/dashboard/tracker" onClick={() => setIsOpen(false)}>
-                        <button className={`w-full py-4 rounded-2xl font-semibold transition ${isActive("/dashboard/tracker")}`}>
+                        <button className={`w-full py-3 md:py-4 rounded-2xl font-semibold transition ${isActive("/dashboard/tracker")}`}>
                             Job Tracker
                         </button>
                     </Link>
 
                     <Link to="/dashboard/linkedin" onClick={() => setIsOpen(false)}>
-                        <button className={`w-full py-4 rounded-2xl font-semibold transition ${isActive("/dashboard/linkedin")}`}>
+                        <button className={`w-full py-3 md:py-4 rounded-2xl font-semibold transition ${isActive("/dashboard/linkedin")}`}>
                             LinkedIn Optimizer
                         </button>
                     </Link>
@@ -81,7 +81,7 @@ function DashboardLayout() {
             </div>
 
             {/* Main Content Area */}
-            <div className="flex-1 pt-[65px] md:pt-0 md:h-screen overflow-y-auto">
+            <div className="flex-1 pt-0 md:h-screen overflow-y-auto">
                 <Outlet />
             </div>
         </div>
