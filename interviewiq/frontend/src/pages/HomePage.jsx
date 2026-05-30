@@ -70,16 +70,16 @@ function HomePage() {
                         </select>
                     </div>
 
-                    <div className="flex flex-col md:flex-row gap-4 md:gap-5 w-full md:w-auto mt-2">
-                        <Link to={user ? "/dashboard/interview" : "/login"} state={{ role: selectedRole }} className="w-full md:w-auto">
-                            <button className="w-full md:w-auto bg-cyan-500 hover:bg-cyan-600 transition px-10 py-4 rounded-2xl text-lg font-semibold cursor-pointer">
+                    <div className="flex flex-row gap-3 md:gap-5 w-full max-w-md md:max-w-none md:w-auto mt-2 px-4 md:px-0">
+                        <Link to={user ? "/dashboard/interview" : "/login"} state={{ role: selectedRole }} className="flex-1 md:flex-none">
+                            <button className="w-full md:w-auto bg-cyan-500 hover:bg-cyan-600 transition px-4 py-3.5 md:px-10 md:py-4 rounded-xl md:rounded-2xl text-sm sm:text-base md:text-lg font-semibold cursor-pointer whitespace-nowrap">
                                 Start Interview
                             </button>
                         </Link>
 
                         <button
                             onClick={() => document.getElementById('how-it-works')?.scrollIntoView({ behavior: 'smooth' })}
-                            className="w-full md:w-auto border border-slate-600 hover:border-cyan-400 hover:text-cyan-400 transition-all duration-300 px-8 py-4 rounded-2xl text-lg"
+                            className="flex-1 md:flex-none border border-slate-600 hover:border-cyan-400 hover:text-cyan-400 transition-all duration-300 px-4 py-3.5 md:px-8 md:py-4 rounded-xl md:rounded-2xl text-sm sm:text-base md:text-lg whitespace-nowrap"
                         >
                             Watch Demo
                         </button>
@@ -87,30 +87,33 @@ function HomePage() {
                 </motion.div>
 
                 {/* Stats */}
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-8 mt-12 md:mt-24 w-full max-w-4xl relative z-40">
+                <div className="grid grid-cols-3 gap-2 md:gap-8 mt-12 md:mt-24 w-full max-w-4xl relative z-40 px-2 md:px-0">
 
                     <motion.div
                         whileHover={{ scale: 1.05 }}
                         transition={{ type: "spring", stiffness: 250 }}
-                        className="bg-slate-900/70 border border-slate-800 rounded-2xl md:rounded-3xl p-5 md:p-8 backdrop-blur-md"
-                    >                        <h2 className="text-xl md:text-2xl font-bold text-cyan-400">AI Powered</h2>
-                        <p className="text-slate-400 mt-2 text-sm md:text-base">Smart Interview Engine</p>
+                        className="bg-slate-900/70 border border-slate-800 rounded-xl md:rounded-3xl p-3 md:p-8 backdrop-blur-md flex flex-col justify-center min-h-[90px] md:min-h-0"
+                    >
+                        <h2 className="text-xs sm:text-base md:text-2xl font-bold text-cyan-400">AI Powered</h2>
+                        <p className="text-slate-400 mt-1 md:mt-2 text-[9px] sm:text-xs md:text-base">Smart Interview Engine</p>
                     </motion.div>
 
                     <motion.div
                         whileHover={{ scale: 1.05 }}
                         transition={{ type: "spring", stiffness: 250 }}
-                        className="bg-slate-900/70 border border-slate-800 rounded-2xl md:rounded-3xl p-5 md:p-8 backdrop-blur-md"
-                    >                    <h2 className="text-xl md:text-2xl font-bold text-cyan-400">Instant</h2>
-                        <p className="text-slate-400 mt-2 text-sm md:text-base">Performance Feedback</p>
+                        className="bg-slate-900/70 border border-slate-800 rounded-xl md:rounded-3xl p-3 md:p-8 backdrop-blur-md flex flex-col justify-center min-h-[90px] md:min-h-0"
+                    >
+                        <h2 className="text-xs sm:text-base md:text-2xl font-bold text-cyan-400">Instant</h2>
+                        <p className="text-slate-400 mt-1 md:mt-2 text-[9px] sm:text-xs md:text-base">Performance Feedback</p>
                     </motion.div>
 
                     <motion.div
                         whileHover={{ scale: 1.05 }}
                         transition={{ type: "spring", stiffness: 250 }}
-                        className="bg-slate-900/70 border border-slate-800 rounded-2xl md:rounded-3xl p-5 md:p-8 backdrop-blur-md"
-                    >                    <h2 className="text-xl md:text-2xl font-bold text-cyan-400">Multi Role</h2>
-                        <p className="text-slate-400 mt-2 text-sm md:text-base">Frontend, Backend & HR</p>
+                        className="bg-slate-900/70 border border-slate-800 rounded-xl md:rounded-3xl p-3 md:p-8 backdrop-blur-md flex flex-col justify-center min-h-[90px] md:min-h-0"
+                    >
+                        <h2 className="text-xs sm:text-base md:text-2xl font-bold text-cyan-400">Multi Role</h2>
+                        <p className="text-slate-400 mt-1 md:mt-2 text-[9px] sm:text-xs md:text-base">Frontend, Backend & HR</p>
                     </motion.div>
 
                 </div>
@@ -132,13 +135,13 @@ function HomePage() {
                     </p>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
+                <div className="flex flex-row overflow-x-auto snap-x snap-mandatory gap-6 pb-6 md:pb-0 md:grid md:grid-cols-3 md:gap-8 md:overflow-x-visible scrollbar-none px-4 md:px-0">
 
                     {/* Card 1 */}
                     <motion.div
                         whileHover={{ y: -10, scale: 1.02 }}
                         transition={{ type: "spring", stiffness: 200 }}
-                        className="bg-slate-900/70 border border-slate-800 rounded-2xl md:rounded-3xl p-6 md:p-8 hover:border-cyan-500 transition-all duration-300"
+                        className="snap-center shrink-0 w-[85%] md:w-auto bg-slate-900/70 border border-slate-800 rounded-2xl md:rounded-3xl p-6 md:p-8 hover:border-cyan-500 transition-all duration-300"
                     >
                         <div className="text-4xl md:text-5xl mb-4 md:mb-6">🎤</div>
 
@@ -156,7 +159,7 @@ function HomePage() {
                     <motion.div
                         whileHover={{ y: -10, scale: 1.02 }}
                         transition={{ type: "spring", stiffness: 200 }}
-                        className="bg-slate-900/70 border border-slate-800 rounded-2xl md:rounded-3xl p-6 md:p-8 hover:border-cyan-500 transition-all duration-300"
+                        className="snap-center shrink-0 w-[85%] md:w-auto bg-slate-900/70 border border-slate-800 rounded-2xl md:rounded-3xl p-6 md:p-8 hover:border-cyan-500 transition-all duration-300"
                     >
                         <div className="text-4xl md:text-5xl mb-4 md:mb-6">📊</div>
 
@@ -174,7 +177,7 @@ function HomePage() {
                     <motion.div
                         whileHover={{ y: -10, scale: 1.02 }}
                         transition={{ type: "spring", stiffness: 200 }}
-                        className="bg-slate-900/70 border border-slate-800 rounded-2xl md:rounded-3xl p-6 md:p-8 hover:border-cyan-500 transition-all duration-300"
+                        className="snap-center shrink-0 w-[85%] md:w-auto bg-slate-900/70 border border-slate-800 rounded-2xl md:rounded-3xl p-6 md:p-8 hover:border-cyan-500 transition-all duration-300"
                     >
                         <div className="text-4xl md:text-5xl mb-4 md:mb-6">💼</div>
 
@@ -208,10 +211,10 @@ function HomePage() {
                         </p>
                     </div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-10">
+                    <div className="flex flex-row overflow-x-auto snap-x snap-mandatory gap-6 pb-6 pt-5 md:pt-0 md:pb-0 md:grid md:grid-cols-3 md:gap-10 md:overflow-x-visible scrollbar-none px-4 md:px-0">
 
                         {/* Step 1 */}
-                        <div className="relative bg-slate-900 border border-slate-800 rounded-2xl md:rounded-3xl p-6 md:p-10">
+                        <div className="snap-center shrink-0 w-[85%] md:w-auto relative bg-slate-900 border border-slate-800 rounded-2xl md:rounded-3xl p-6 md:p-10">
 
                             <div className="absolute -top-5 left-6 md:left-8 bg-cyan-500 text-black w-10 h-10 md:w-12 md:h-12 rounded-full flex items-center justify-center font-bold text-lg md:text-xl">
                                 1
@@ -229,7 +232,7 @@ function HomePage() {
                         </div>
 
                         {/* Step 2 */}
-                        <div className="relative bg-slate-900 border border-slate-800 rounded-2xl md:rounded-3xl p-6 md:p-10">
+                        <div className="snap-center shrink-0 w-[85%] md:w-auto relative bg-slate-900 border border-slate-800 rounded-2xl md:rounded-3xl p-6 md:p-10">
 
                             <div className="absolute -top-5 left-6 md:left-8 bg-cyan-500 text-black w-10 h-10 md:w-12 md:h-12 rounded-full flex items-center justify-center font-bold text-lg md:text-xl">
                                 2
@@ -247,7 +250,7 @@ function HomePage() {
                         </div>
 
                         {/* Step 3 */}
-                        <div className="relative bg-slate-900 border border-slate-800 rounded-2xl md:rounded-3xl p-6 md:p-10">
+                        <div className="snap-center shrink-0 w-[85%] md:w-auto relative bg-slate-900 border border-slate-800 rounded-2xl md:rounded-3xl p-6 md:p-10">
 
                             <div className="absolute -top-5 left-6 md:left-8 bg-cyan-500 text-black w-10 h-10 md:w-12 md:h-12 rounded-full flex items-center justify-center font-bold text-lg md:text-xl">
                                 3
