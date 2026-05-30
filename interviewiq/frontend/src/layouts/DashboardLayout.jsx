@@ -16,7 +16,7 @@ function DashboardLayout() {
         <div className="min-h-screen bg-[#020617] text-white flex flex-col md:flex-row">
             {/* Mobile Header */}
             <div className="md:hidden flex items-center justify-between bg-slate-900 border-b border-slate-800 px-6 py-4 sticky top-0 z-50">
-                <Link to="/dashboard">
+                <Link to="/">
                     <h1 className="text-2xl font-black text-cyan-400">
                         InterviewIQ
                     </h1>
@@ -35,7 +35,7 @@ function DashboardLayout() {
                 md:block w-full md:w-[260px] bg-slate-900 border-b md:border-b-0 md:border-r border-slate-800 p-6 md:p-8 shrink-0 
                 fixed md:relative inset-x-0 top-[65px] md:top-0 z-40 h-[calc(100vh-65px)] md:h-screen overflow-y-auto transition-all duration-300
             `}>
-                <Link to="/dashboard" className="hidden md:block">
+                <Link to="/" className="hidden md:block">
                     <h1 className="text-3xl font-black text-cyan-400 mb-8 md:mb-14 cursor-pointer">
                         InterviewIQ
                     </h1>
