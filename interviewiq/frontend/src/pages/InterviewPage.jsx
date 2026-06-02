@@ -150,6 +150,24 @@ function InterviewPage() {
         }
     }, [timeLeft, showReport, codingMode]);
 
+    // AI Question Voiceover (Speech Synthesis)
+    useEffect(() => {
+        if (question && !codingMode && !showReport) {
+            // Cancel any ongoing speech to avoid overlaps
+            window.speechSynthesis?.cancel();
+
+            const utterance = new SpeechSynthesisUtterance(question);
+            utterance.rate = 0.95; // Natural conversational speed
+            utterance.pitch = 1.0;
+
+            window.speechSynthesis?.speak(utterance);
+        }
+
+        return () => {
+            window.speechSynthesis?.cancel();
+        };
+    }, [question, codingMode, showReport]);
+
     // Format Time Function
     const formatTime = (seconds) => {
         const m = Math.floor(seconds / 60);
