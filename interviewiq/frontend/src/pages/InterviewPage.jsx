@@ -118,6 +118,8 @@ function InterviewPage() {
     const [isFetchingCode, setIsFetchingCode] = useState(false);
     const [isRunningCode, setIsRunningCode] = useState(false);
     const [selectedLanguage, setSelectedLanguage] = useState("javascript");
+    const [editorTheme, setEditorTheme] = useState("vs-dark");
+    const [editorFontSize, setEditorFontSize] = useState(14);
 
     const [currentCodingQuestion, setCurrentCodingQuestion] =
         useState(null);
@@ -472,23 +474,55 @@ function InterviewPage() {
                     {currentCodingQuestion.question}
                 </p>
 
-                <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-4">
+                <div className="flex flex-col xl:flex-row xl:justify-between xl:items-center gap-4 mb-4">
                     <h2 className="text-xl font-bold text-slate-300">Code Workspace</h2>
-                    <div className="flex items-center gap-3">
-                        <span className="text-sm text-slate-400 font-medium">Language:</span>
-                        <select
-                            value={selectedLanguage}
-                            onChange={(e) => {
-                                const newLang = e.target.value;
-                                setSelectedLanguage(newLang);
-                                startCodingRound(newLang);
-                            }}
-                            className="bg-slate-900 border border-slate-700 text-cyan-400 font-bold px-3 py-1.5 rounded-xl outline-none cursor-pointer hover:border-cyan-500/50 transition-all text-sm"
-                        >
-                            <option value="javascript">JavaScript</option>
-                            <option value="python">Python</option>
-                            <option value="java">Java</option>
-                        </select>
+                    <div className="flex flex-wrap items-center gap-4">
+                        {/* Language Select */}
+                        <div className="flex items-center gap-2">
+                            <span className="text-sm text-slate-400 font-medium">Language:</span>
+                            <select
+                                value={selectedLanguage}
+                                onChange={(e) => {
+                                    const newLang = e.target.value;
+                                    setSelectedLanguage(newLang);
+                                    startCodingRound(newLang);
+                                }}
+                                className="bg-slate-900 border border-slate-700 text-cyan-400 font-bold px-3 py-1.5 rounded-xl outline-none cursor-pointer hover:border-cyan-500/50 transition-all text-sm"
+                            >
+                                <option value="javascript">JavaScript</option>
+                                <option value="python">Python</option>
+                                <option value="java">Java</option>
+                            </select>
+                        </div>
+
+                        {/* Theme Select */}
+                        <div className="flex items-center gap-2">
+                            <span className="text-sm text-slate-400 font-medium">Theme:</span>
+                            <select
+                                value={editorTheme}
+                                onChange={(e) => setEditorTheme(e.target.value)}
+                                className="bg-slate-900 border border-slate-700 text-cyan-400 font-bold px-3 py-1.5 rounded-xl outline-none cursor-pointer hover:border-cyan-500/50 transition-all text-sm"
+                            >
+                                <option value="vs-dark">Dark</option>
+                                <option value="light">Light</option>
+                            </select>
+                        </div>
+
+                        {/* Font Size Select */}
+                        <div className="flex items-center gap-2">
+                            <span className="text-sm text-slate-400 font-medium">Font:</span>
+                            <select
+                                value={editorFontSize}
+                                onChange={(e) => setEditorFontSize(Number(e.target.value))}
+                                className="bg-slate-900 border border-slate-700 text-cyan-400 font-bold px-3 py-1.5 rounded-xl outline-none cursor-pointer hover:border-cyan-500/50 transition-all text-sm"
+                            >
+                                <option value="12">12px</option>
+                                <option value="14">14px</option>
+                                <option value="16">16px</option>
+                                <option value="18">18px</option>
+                                <option value="20">20px</option>
+                            </select>
+                        </div>
                     </div>
                 </div>
 
@@ -496,12 +530,12 @@ function InterviewPage() {
                     <Editor
                         height="100%"
                         language={selectedLanguage}
-                        theme="vs-dark"
+                        theme={editorTheme}
                         value={code}
                         onChange={(value) => setCode(value || "")}
                         options={{
                             minimap: { enabled: false },
-                            fontSize: 14,
+                            fontSize: editorFontSize,
                             padding: { top: 12 }
                         }}
                     />
@@ -644,9 +678,24 @@ function InterviewPage() {
                         >
                             <div className="absolute top-0 left-0 w-1 h-full bg-cyan-500 shadow-[0_0_15px_rgba(6,182,212,0.5)]"></div>
                             <div className="flex items-center justify-between mb-4 md:mb-6">
-                                <div className="flex items-center gap-2">
-                                    {isListening && <div className="w-2 h-2 bg-red-500 rounded-full animate-ping"></div>}
-                                    <span className="text-cyan-400 text-[10px] md:text-xs font-bold uppercase tracking-[0.2em]">CURRENT QUESTION</span>
+                                <div className="flex items-center gap-2.5">
+                                    {isListening ? (
+                                        <div className="flex items-center gap-2 px-3 py-1 bg-red-500/10 border border-red-500/20 rounded-full">
+                                            <div className="flex items-end gap-[3px] h-4 w-7 justify-center pb-0.5">
+                                                <span className="w-[3px] bg-red-500 rounded-full animate-equalizer-1"></span>
+                                                <span className="w-[3px] bg-red-500 rounded-full animate-equalizer-2"></span>
+                                                <span className="w-[3px] bg-red-500 rounded-full animate-equalizer-3"></span>
+                                                <span className="w-[3px] bg-red-500 rounded-full animate-equalizer-4"></span>
+                                                <span className="w-[3px] bg-red-500 rounded-full animate-equalizer-5"></span>
+                                            </div>
+                                            <span className="text-[10px] text-red-400 font-black tracking-wider uppercase">Listening</span>
+                                        </div>
+                                    ) : (
+                                        <>
+                                            <div className="w-2 h-2 bg-cyan-500 rounded-full shadow-[0_0_8px_rgba(6,182,212,0.8)]"></div>
+                                            <span className="text-cyan-400 text-[10px] md:text-xs font-bold uppercase tracking-[0.2em]">CURRENT QUESTION</span>
+                                        </>
+                                    )}
                                 </div>
                                 <div className="flex items-center gap-3">
                                     {/* Mute/Unmute Audio */}
