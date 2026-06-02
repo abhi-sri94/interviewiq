@@ -1,3 +1,5 @@
+{
+  "$schema": "https://json.schemastore.org/web-manifest.json",
   "short_name": "InterviewIQ",
   "name": "InterviewIQ | AI-Powered Mock Interviews",
   "description": "Practice realistic technical mock interviews with AI-generated voice conversations and get instant feedback.",
