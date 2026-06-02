@@ -1,0 +1,18 @@
+{
+  "short_name": "InterviewIQ",
+  "name": "InterviewIQ | AI-Powered Mock Interviews",
+  "description": "Practice realistic technical mock interviews with AI-generated voice conversations and get instant feedback.",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "start_url": "/",
+  "background_color": "#020617",
+  "theme_color": "#020617",
+  "display": "standalone",
+  "orientation": "portrait"
+}
