@@ -2,7 +2,7 @@ import { motion } from "framer-motion";
 import { useState, useEffect, useRef } from "react";
 import { TypeAnimation } from "react-type-animation";
 import Editor from "@monaco-editor/react";
-import { FiMic, FiMicOff } from "react-icons/fi";
+import { FiMic, FiMicOff, FiVolume2, FiVolumeX, FiRotateCcw } from "react-icons/fi";
 import { FaRobot, FaUserCircle } from "react-icons/fa";
 import { BiCodeAlt } from "react-icons/bi";
 import { Link, useLocation } from "react-router-dom";
@@ -150,23 +150,41 @@ function InterviewPage() {
         }
     }, [timeLeft, showReport, codingMode]);
 
+    // Audio States & Voice Settings
+    const [isMuted, setIsMuted] = useState(() => localStorage.getItem("voiceMuted") === "true");
+
+    const speakQuestion = (text) => {
+        if (!text || isMuted || codingMode || showReport) return;
+        window.speechSynthesis?.cancel();
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.rate = 0.95; // Natural conversational speed
+        utterance.pitch = 1.0;
+        window.speechSynthesis?.speak(utterance);
+    };
+
+    const toggleMute = () => {
+        const newMuted = !isMuted;
+        setIsMuted(newMuted);
+        localStorage.setItem("voiceMuted", String(newMuted));
+        if (newMuted) {
+            window.speechSynthesis?.cancel();
+        } else {
+            speakQuestion(question);
+        }
+    };
+
+    const replayQuestion = () => {
+        speakQuestion(question);
+    };
+
     // AI Question Voiceover (Speech Synthesis)
     useEffect(() => {
-        if (question && !codingMode && !showReport) {
-            // Cancel any ongoing speech to avoid overlaps
-            window.speechSynthesis?.cancel();
-
-            const utterance = new SpeechSynthesisUtterance(question);
-            utterance.rate = 0.95; // Natural conversational speed
-            utterance.pitch = 1.0;
-
-            window.speechSynthesis?.speak(utterance);
-        }
+        speakQuestion(question);
 
         return () => {
             window.speechSynthesis?.cancel();
         };
-    }, [question, codingMode, showReport]);
+    }, [question, codingMode, showReport, isMuted]);
 
     // Format Time Function
     const formatTime = (seconds) => {
@@ -625,9 +643,30 @@ function InterviewPage() {
                             className="bg-slate-900/80 border border-white/10 rounded-2xl md:rounded-[2.5rem] p-5 md:p-12 shadow-2xl relative overflow-hidden"
                         >
                             <div className="absolute top-0 left-0 w-1 h-full bg-cyan-500 shadow-[0_0_15px_rgba(6,182,212,0.5)]"></div>
-                            <div className="flex items-center gap-2 mb-4 md:mb-6">
-                                {isListening && <div className="w-2 h-2 bg-red-500 rounded-full animate-ping"></div>}
-                                <span className="text-cyan-400 text-[10px] md:text-xs font-bold uppercase tracking-[0.2em]">CURRENT QUESTION</span>
+                            <div className="flex items-center justify-between mb-4 md:mb-6">
+                                <div className="flex items-center gap-2">
+                                    {isListening && <div className="w-2 h-2 bg-red-500 rounded-full animate-ping"></div>}
+                                    <span className="text-cyan-400 text-[10px] md:text-xs font-bold uppercase tracking-[0.2em]">CURRENT QUESTION</span>
+                                </div>
+                                <div className="flex items-center gap-3">
+                                    {/* Mute/Unmute Audio */}
+                                    <button
+                                        onClick={toggleMute}
+                                        className="p-2 bg-slate-800/80 hover:bg-slate-700/80 rounded-xl transition text-slate-300 hover:text-white cursor-pointer active:scale-95"
+                                        title={isMuted ? "Unmute Voiceover" : "Mute Voiceover"}
+                                    >
+                                        {isMuted ? <FiVolumeX className="text-sm md:text-base" /> : <FiVolume2 className="text-sm md:text-base" />}
+                                    </button>
+                                    
+                                    {/* Replay Audio */}
+                                    <button
+                                        onClick={replayQuestion}
+                                        className="p-2 bg-slate-800/80 hover:bg-slate-700/80 rounded-xl transition text-slate-300 hover:text-white cursor-pointer active:scale-95"
+                                        title="Replay Question"
+                                    >
+                                        <FiRotateCcw className="text-sm md:text-base" />
+                                    </button>
+                                </div>
                             </div>
                             <h2 className="text-lg sm:text-xl md:text-3xl font-bold leading-relaxed text-white">
                                 <TypeAnimation key={question} sequence={[question]} wrapper="span" speed={70} repeat={0} />
