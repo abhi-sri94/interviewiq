@@ -61,6 +61,11 @@ function InterviewPage() {
 
             const data = await response.json();
 
+            if (!response.ok || !data.run) {
+                alert("❌ Execution Error: Failed to run code. Please try again.");
+                return;
+            }
+
             if (data.run.code !== 0) {
                 alert("❌ Execution Error:\n" + data.run.stderr);
                 return;
@@ -203,10 +208,12 @@ function InterviewPage() {
 
             setQuestion(
                 data.question ||
-                data.candidates?.[0]?.content?.parts?.[0]?.text
+                data.candidates?.[0]?.content?.parts?.[0]?.text ||
+                "No question generated"
             );
         } catch (error) {
             console.log("FETCH ERROR:", error);
+            setQuestion("No question generated. Please click Next Question to retry.");
         }
     };
 
@@ -232,6 +239,9 @@ function InterviewPage() {
             );
 
             const data = await res.json();
+            if (!res.ok) {
+                throw new Error(data.error || "Failed to generate coding question");
+            }
             console.log(data);
             setCurrentCodingQuestion(data);
 
@@ -239,6 +249,7 @@ function InterviewPage() {
 
         } catch (error) {
             console.log(error);
+            alert("❌ Error starting coding round:\n" + error.message);
         } finally {
             setIsFetchingCode(false);
         }
@@ -783,7 +794,10 @@ function InterviewPage() {
                                             body: JSON.stringify({ question, answer }),
                                         });
                                         const data = await response.json();
-                                        const aiText = data.feedback;
+                                        if (!response.ok) {
+                                            throw new Error(data.error || "Failed to analyze answer");
+                                        }
+                                        const aiText = data.feedback || "";
                                         setFeedback(aiText);
                                         const technicalMatch = aiText.match(/TECHNICAL:\s*(\d+)/);
                                         const communicationMatch = aiText.match(/COMMUNICATION:\s*(\d+)/);
@@ -810,6 +824,7 @@ function InterviewPage() {
                                         }]);
                                     } catch (error) {
                                         console.log(error);
+                                        alert("❌ Error analyzing answer:\n" + error.message);
                                     } finally {
                                         setLoading(false);
                                     }
