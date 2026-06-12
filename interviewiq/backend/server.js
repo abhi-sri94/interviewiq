@@ -35,6 +35,21 @@ app.get("/", (req, res) => {
     res.send("Backend running...");
 });
 
+// Helper to robustly extract and parse JSON from LLM text responses
+const extractJSON = (text) => {
+    try {
+        const start = text.indexOf("{");
+        const end = text.lastIndexOf("}");
+        if (start !== -1 && end !== -1 && end > start) {
+            const jsonStr = text.substring(start, end + 1);
+            return JSON.parse(jsonStr);
+        }
+        return JSON.parse(text);
+    } catch (e) {
+        throw new Error("Failed to parse response from AI: " + e.message);
+    }
+};
+
 // Auth Middleware
 const authMiddleware = (req, res, next) => {
     const token = req.headers.authorization?.split(" ")[1];
@@ -156,9 +171,7 @@ Return ONLY a valid JSON object using this exact structure, but replace the valu
             throw new Error(data.error?.message || `Gemini API returned status ${response.status}`);
         }
         const textResponse = data.candidates?.[0]?.content?.parts?.[0]?.text || "";
-        const cleanJson = textResponse.replace(/```json/g, "").replace(/```/g, "").trim();
-        
-        const result = JSON.parse(cleanJson);
+        const result = extractJSON(textResponse);
         res.json(result);
 
     } catch (err) {
@@ -345,11 +358,6 @@ Do not use triple backticks.
             data.candidates?.[0]?.output ||
             "";
 
-        const cleanJson = text
-            .replace(/```json/g, "")
-            .replace(/```/g, "")
-            .trim();
-
         const defaultQuestions = {
             javascript: {
                 title: "Reverse a String",
@@ -371,11 +379,11 @@ Do not use triple backticks.
             }
         };
 
-        if (!cleanJson || cleanJson === "") {
+        if (!text || text.trim() === "") {
             return res.json(defaultQuestions[language.toLowerCase()] || defaultQuestions.javascript);
         }
 
-        const parsed = JSON.parse(cleanJson);
+        const parsed = extractJSON(text);
         res.json(parsed);
 
     } catch (error) {
@@ -444,8 +452,7 @@ Return ONLY a valid JSON object with the following fields:
             throw new Error(data.error?.message || `Gemini API returned status ${response.status}`);
         }
         const textResponse = data.candidates?.[0]?.content?.parts?.[0]?.text || "";
-        const cleanJson = textResponse.replace(/```json/g, "").replace(/```/g, "").trim();
-        const result = JSON.parse(cleanJson);
+        const result = extractJSON(textResponse);
         res.json(result);
 
     } catch (err) {

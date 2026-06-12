@@ -11,10 +11,13 @@ function LinkedInOptimizerPage() {
     const [result, setResult] = useState(null);
     const [loading, setLoading] = useState(false);
     const [copied, setCopied] = useState(false);
+    const [error, setError] = useState("");
 
     const handleOptimize = async () => {
         if (!profileText.trim()) return;
         setLoading(true);
+        setError("");
+        setResult(null);
         try {
             const res = await fetch(`${API_BASE_URL}/api/optimize-linkedin`, {
                 method: "POST",
@@ -25,9 +28,13 @@ function LinkedInOptimizerPage() {
                 body: JSON.stringify({ profileText })
             });
             const data = await res.json();
+            if (!res.ok) {
+                throw new Error(data.error || "Optimization failed");
+            }
             setResult(data);
         } catch (err) {
             console.error(err);
+            setError(err.message || "Failed to optimize profile");
         } finally {
             setLoading(false);
         }
@@ -78,12 +85,17 @@ function LinkedInOptimizerPage() {
                                 </>
                             )}
                         </button>
+                        {error && (
+                            <p className="mt-4 text-red-500 text-xs md:text-sm text-center font-semibold">
+                                {error}
+                            </p>
+                        )}
                     </div>
                 </div>
 
                 {/* Results Section */}
                 <div className="space-y-6">
-                    {result ? (
+                    {result && result.suggestedHeadline ? (
                         <motion.div 
                             initial={{ opacity: 0, x: 20 }}
                             animate={{ opacity: 1, x: 0 }}
