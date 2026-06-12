@@ -152,6 +152,9 @@ Return ONLY a valid JSON object using this exact structure, but replace the valu
         );
 
         const data = await response.json();
+        if (!response.ok) {
+            throw new Error(data.error?.message || `Gemini API returned status ${response.status}`);
+        }
         const textResponse = data.candidates?.[0]?.content?.parts?.[0]?.text || "";
         const cleanJson = textResponse.replace(/```json/g, "").replace(/```/g, "").trim();
         
@@ -193,6 +196,9 @@ app.get("/generate-question", async (req, res) => {
         console.log("STATUS:", response.status);
 
         const data = await response.json();
+        if (!response.ok) {
+            throw new Error(data.error?.message || `Gemini API returned status ${response.status}`);
+        }
 
         console.log(data);
 
@@ -270,6 +276,9 @@ Can you explain dependency arrays in more detail?
         );
 
         const data = await response.json();
+        if (!response.ok) {
+            throw new Error(data.error?.message || `Gemini API returned status ${response.status}`);
+        }
 
         const feedback =
             data.candidates?.[0]?.content?.parts?.[0]?.text ||
@@ -326,6 +335,9 @@ Do not use triple backticks.
         );
 
         const data = await response.json();
+        if (!response.ok) {
+            throw new Error(data.error?.message || `Gemini API returned status ${response.status}`);
+        }
         console.log(data);
 
         const text =
@@ -428,6 +440,9 @@ Return ONLY a valid JSON object with the following fields:
         );
 
         const data = await response.json();
+        if (!response.ok) {
+            throw new Error(data.error?.message || `Gemini API returned status ${response.status}`);
+        }
         const textResponse = data.candidates?.[0]?.content?.parts?.[0]?.text || "";
         const cleanJson = textResponse.replace(/```json/g, "").replace(/```/g, "").trim();
         const result = JSON.parse(cleanJson);
