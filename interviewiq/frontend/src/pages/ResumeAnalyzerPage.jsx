@@ -1,9 +1,11 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
+import { useAuth } from "../context/AuthContext";
 import { API_BASE_URL } from "../config";
 
 
 function ResumeAnalyzerPage() {
+    const { token } = useAuth();
     const [file, setFile] = useState(null);
     const [jobDescription, setJobDescription] = useState("");
     const [loading, setLoading] = useState(false);
@@ -35,6 +37,9 @@ function ResumeAnalyzerPage() {
         try {
             const res = await fetch(`${API_BASE_URL}/api/analyze-resume`, {
                 method: "POST",
+                headers: {
+                    Authorization: `Bearer ${token}`
+                },
                 body: formData,
             });
 

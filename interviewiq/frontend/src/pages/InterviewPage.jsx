@@ -6,6 +6,7 @@ import { FiMic, FiMicOff, FiVolume2, FiVolumeX, FiRotateCcw } from "react-icons/
 import { FaRobot, FaUserCircle } from "react-icons/fa";
 import { BiCodeAlt } from "react-icons/bi";
 import { Link, useLocation } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 import { API_BASE_URL } from "../config";
 
 
@@ -15,6 +16,8 @@ const SpeechRecognition =
 function InterviewPage() {
     const location = useLocation();
     const role = location.state?.role || "Frontend React Developer";
+    const { token } = useAuth();
+    const [isTailored, setIsTailored] = useState(false);
 
     const [code, setCode] = useState("");
     const [timeLeft, setTimeLeft] = useState(600); // 10 minutes
@@ -103,11 +106,35 @@ function InterviewPage() {
     // baaki functions...
     const hasFetched = useRef(false);
     useEffect(() => {
+        const checkResume = async () => {
+            const activeToken = token || localStorage.getItem("token");
+            if (!activeToken) return;
+            try {
+                const res = await fetch(`${API_BASE_URL}/api/user/profile`, {
+                    headers: {
+                        Authorization: `Bearer ${activeToken}`
+                    }
+                });
+                if (res.ok) {
+                    const profile = await res.json();
+                    if (profile && profile.resumeText) {
+                        setIsTailored(true);
+                    }
+                }
+            } catch (err) {
+                console.error("Error fetching profile to verify resume tailoring:", err);
+            }
+        };
+        checkResume();
+    }, [token]);
+
+    useEffect(() => {
         if (!hasFetched.current) {
-            fetchQuestion();
+            const activeToken = token || localStorage.getItem("token");
+            fetchQuestion(activeToken);
             hasFetched.current = true;
         }
-    }, []);
+    }, [token]);
 
     const [question, setQuestion] = useState("");
     const [answer, setAnswer] = useState("");
@@ -200,9 +227,16 @@ function InterviewPage() {
         return `${m}:${s < 10 ? '0' : ''}${s}`;
     };
 
-    const fetchQuestion = async () => {
+    const fetchQuestion = async (activeToken) => {
         try {
-            const response = await fetch(`${API_BASE_URL}/generate-question?role=${encodeURIComponent(role)}`);
+            const authToken = activeToken || token || localStorage.getItem("token");
+            const headers = {};
+            if (authToken) {
+                headers["Authorization"] = `Bearer ${authToken}`;
+            }
+            const response = await fetch(`${API_BASE_URL}/generate-question?role=${encodeURIComponent(role)}`, {
+                headers
+            });
 
             const data = await response.json();
 
@@ -650,6 +684,12 @@ function InterviewPage() {
                             </div>
                             <h2 className="text-base md:text-lg font-bold text-white">AI Interviewer</h2>
                             <p className="text-[10px] text-gray-500 mt-0.5 md:mt-1 uppercase tracking-widest">{role}</p>
+                            {isTailored && (
+                                <div className="mt-2.5 inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold text-cyan-400 bg-cyan-500/10 border border-cyan-500/30 shadow-[0_0_15px_rgba(6,182,212,0.15)] animate-pulse">
+                                    <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-ping"></span>
+                                    📝 Tailored to your Resume
+                                </div>
+                            )}
                             <div className="mt-4 md:mt-8 text-left">
                                 <div className="flex justify-between text-[9px] text-gray-500 mb-1.5 md:mb-2 font-bold uppercase tracking-tighter">
                                     <span>PROGRESS</span>
@@ -788,9 +828,14 @@ function InterviewPage() {
                                 onClick={async () => {
                                     try {
                                         setLoading(true);
+                                        const activeToken = token || localStorage.getItem("token");
+                                        const headers = { "Content-Type": "application/json" };
+                                        if (activeToken) {
+                                            headers["Authorization"] = `Bearer ${activeToken}`;
+                                        }
                                         const response = await fetch(`${API_BASE_URL}/analyze-answer`, {
                                             method: "POST",
-                                            headers: { "Content-Type": "application/json" },
+                                            headers,
                                             body: JSON.stringify({ question, answer }),
                                         });
                                         const data = await response.json();

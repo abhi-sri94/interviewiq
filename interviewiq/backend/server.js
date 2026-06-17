@@ -64,6 +64,31 @@ const authMiddleware = (req, res, next) => {
     }
 };
 
+// Optional User Extractor Helper
+const getOptionalUserId = (req) => {
+    try {
+        const token = req.headers.authorization?.split(" ")[1];
+        if (token) {
+            const decoded = jwt.verify(token, process.env.JWT_SECRET);
+            return decoded.id;
+        }
+    } catch (e) {
+        // Ignore parsing/verification errors to fallback
+    }
+    return null;
+};
+
+// --- User Profile Route ---
+app.get("/api/user/profile", authMiddleware, async (req, res) => {
+    try {
+        const user = await User.findById(req.userId).select("-password");
+        if (!user) return res.status(404).json({ error: "User not found" });
+        res.json(user);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
 // --- Auth Routes ---
 app.post("/api/auth/register", async (req, res) => {
     try {
@@ -116,7 +141,7 @@ app.post("/api/auth/login", async (req, res) => {
 });
 
 // --- AI Resume Analyzer Route ---
-app.post("/api/analyze-resume", upload.single("resume"), async (req, res) => {
+app.post("/api/analyze-resume", authMiddleware, upload.single("resume"), async (req, res) => {
     try {
         if (!req.file) {
             return res.status(400).json({ error: "No resume PDF provided" });
@@ -172,6 +197,14 @@ Return ONLY a valid JSON object using this exact structure, but replace the valu
         }
         const textResponse = data.candidates?.[0]?.content?.parts?.[0]?.text || "";
         const result = extractJSON(textResponse);
+
+        // Update authenticated user record
+        await User.findByIdAndUpdate(req.userId, {
+            resumeText,
+            targetJobDescription: jobDescription,
+            resumeAnalysis: result
+        });
+
         res.json(result);
 
     } catch (err) {
@@ -185,6 +218,44 @@ app.get("/generate-question", async (req, res) => {
         const role = req.query.role || "Frontend React Developer";
         console.log("API KEY:", process.env.GEMINI_API_KEY);
 
+        const userId = getOptionalUserId(req);
+        let resumeText = "";
+        let jobDesc = "";
+        let userAnalysis = null;
+
+        if (userId) {
+            const user = await User.findById(userId);
+            if (user && user.resumeText) {
+                resumeText = user.resumeText;
+                jobDesc = user.targetJobDescription;
+                userAnalysis = user.resumeAnalysis;
+            }
+        }
+
+        let promptText = `Generate one single interview question for a candidate applying for the role of ${role}. To ensure a realistic and comprehensive interview, randomly choose to generate EITHER a deep technical role-specific question OR a behavioral/situational question (focusing on teamwork, conflict resolution, problem-solving, cultural fit, or career goals). The question MUST be conversational, direct, and under 2 sentences maximum. Do not add any introductory or concluding text, just output the question itself.`;
+
+        if (resumeText) {
+            promptText = `
+You are a senior technical interviewer.
+Generate one single interview question tailored specifically to this candidate's resume and target job description.
+To ensure a comprehensive interview, choose to generate either a question probing a project or skill listed in their resume (especially checking any missing keywords or weaknesses identified in their analysis), or a behavioral question relating to their past experience.
+The question must be tailored to the target role: ${role}.
+
+TARGET JOB DESCRIPTION:
+${jobDesc}
+
+CANDIDATE RESUME:
+${resumeText}
+
+PREVIOUS ATS ANALYSIS:
+Strengths: ${userAnalysis?.strengths?.join(", ") || ""}
+Weaknesses: ${userAnalysis?.weaknesses?.join(", ") || ""}
+Missing Keywords: ${userAnalysis?.missingKeywords?.join(", ") || ""}
+
+The question MUST be conversational, direct, and under 2 sentences maximum. Do not output any introductory or concluding text, just output the question itself.
+`;
+        }
+
         const response = await fetch(
             `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${process.env.GEMINI_API_KEY}`,
             {
@@ -197,7 +268,7 @@ app.get("/generate-question", async (req, res) => {
                         {
                             parts: [
                                 {
-                                    text: `Generate one single interview question for a candidate applying for the role of ${role}. To ensure a realistic and comprehensive interview, randomly choose to generate EITHER a deep technical role-specific question OR a behavioral/situational question (focusing on teamwork, conflict resolution, problem-solving, cultural fit, or career goals). The question MUST be conversational, direct, and under 2 sentences maximum. Do not add any introductory or concluding text, just output the question itself.`
+                                    text: promptText
                                 }
                             ]
                         }
@@ -233,23 +304,23 @@ app.get("/generate-question", async (req, res) => {
 
 app.post("/analyze-answer", async (req, res) => {
     try {
-
         const { question, answer } = req.body;
 
-        const response = await fetch(
-            `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${process.env.GEMINI_API_KEY}`,
-            {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
+        const userId = getOptionalUserId(req);
+        let resumeText = "";
+        let jobDesc = "";
+        let userAnalysis = null;
 
-                body: JSON.stringify({
-                    contents: [
-                        {
-                            parts: [
-                                {
-                                    text: `
+        if (userId) {
+            const user = await User.findById(userId);
+            if (user && user.resumeText) {
+                resumeText = user.resumeText;
+                jobDesc = user.targetJobDescription;
+                userAnalysis = user.resumeAnalysis;
+            }
+        }
+
+        let promptText = `
 Interview Question:
 ${question}
 
@@ -279,7 +350,64 @@ Your explanation was decent but lacked depth...
 
 FOLLOW_UP:
 Can you explain dependency arrays in more detail?
-`,
+`;
+
+        if (resumeText) {
+            promptText = `
+Candidate Resume Context:
+${resumeText}
+
+Target Job Description:
+${jobDesc}
+
+Candidate's Strengths: ${userAnalysis?.strengths?.join(", ") || ""}
+Candidate's Weaknesses: ${userAnalysis?.weaknesses?.join(", ") || ""}
+
+Interview Question:
+${question}
+
+User Answer:
+${answer}
+
+You are a senior technical interviewer. Analyze the candidate's answer professionally but concisely, keeping in mind their resume and target job description context. If they are speaking about their projects or experiences, verify how it aligns with their resume and the target role requirements.
+
+Give:
+1. Technical Accuracy score out of 100 (evaluate how technically correct they are, especially relative to the role and their claimed resume expertise)
+2. Communication score out of 100
+3. Confidence score out of 100
+4. Short improvement tips (1 sentence max, tailored to how they can better highlight their relevant experience or address missing keywords/weaknesses)
+
+Then decide:
+- If the answer is weak or incomplete, generate ONE follow-up interview question (under 2 sentences) probing deeper into their technical knowledge or resume experience.
+- If the answer is strong, write: "FOLLOW_UP: NONE"
+
+Format response exactly like this:
+
+TECHNICAL: 78
+COMMUNICATION: 82
+CONFIDENCE: 75
+
+FEEDBACK:
+Your explanation was decent but lacked depth...
+
+FOLLOW_UP:
+Can you explain dependency arrays in more detail?
+`;
+        }
+
+        const response = await fetch(
+            `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${process.env.GEMINI_API_KEY}`,
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    contents: [
+                        {
+                            parts: [
+                                {
+                                    text: promptText,
                                 },
                             ],
                         },
