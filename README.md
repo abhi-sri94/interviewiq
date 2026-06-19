@@ -5,7 +5,7 @@
 
 InterviewIQ is an advanced mock interview simulator designed to help developers, students, and professionals prepare for technical and HR interviews. It leverages the Google Gemini AI to generate dynamic questions, evaluate spoken or written answers, and provide real-time, constructive feedback.
 
-## ✨ Features
+## ✨ Features 
 
 - **🗣️ AI Voice Interviews**: Practice realistic mock interviews using live speech-to-text recognition.
 - **💻 Integrated Coding Environment**: Built-in **Monaco Editor** (VS Code's core editor) for live coding rounds.
