@@ -658,6 +658,12 @@ app.get("/api/interviews", authMiddleware, async (req, res) => {
     }
 });
 
-app.listen(8000, () => {
-    console.log("Server running on port 8000");
-});
+// Export app for serverless deployment
+export default app;
+
+// Start local server only if not in a serverless environment
+if (process.env.VERCEL !== "1" && !process.env.NOW_REGION) {
+    app.listen(8000, () => {
+        console.log("Server running on port 8000");
+    });
+}
