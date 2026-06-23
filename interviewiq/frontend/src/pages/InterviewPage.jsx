@@ -228,6 +228,7 @@ function InterviewPage() {
     };
 
     const fetchQuestion = async (activeToken) => {
+        setLoading(true);
         try {
             const authToken = activeToken || token || localStorage.getItem("token");
             const headers = {};
@@ -242,6 +243,7 @@ function InterviewPage() {
 
             if (!response.ok) {
                 setQuestion(`Error: ${data.error || "Failed to generate question. Please try again."}`);
+                setLoading(false);
                 return;
             }
 
@@ -253,6 +255,8 @@ function InterviewPage() {
         } catch (error) {
             console.log("FETCH ERROR:", error);
             setQuestion("No question generated. Please click Next Question to retry.");
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -897,9 +901,10 @@ function InterviewPage() {
 
                             <button
                                 onClick={nextQuestion}
-                                className="px-4 py-2.5 border border-white/10 hover:border-cyan-400 hover:bg-cyan-400/10 rounded-xl transition text-white font-bold active:scale-95 flex-1 sm:flex-none text-center text-sm md:px-8 md:py-4 md:text-base cursor-pointer"
+                                disabled={loading}
+                                className="px-4 py-2.5 border border-white/10 hover:border-cyan-400 hover:bg-cyan-400/10 rounded-xl transition text-white font-bold active:scale-95 flex-1 sm:flex-none text-center text-sm md:px-8 md:py-4 md:text-base cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
                             >
-                                Next Question
+                                {loading ? "Generating..." : "Next Question"}
                             </button>
 
                             <button
