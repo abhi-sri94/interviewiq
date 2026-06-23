@@ -19,9 +19,25 @@ console.log("KEY =", process.env.GEMINI_API_KEY);
 const app = express();
 const upload = multer({ storage: multer.memoryStorage() });
 
-mongoose.connect(process.env.MONGO_URI)
-    .then(() => console.log("Connected to MongoDB Atlas"))
-    .catch((err) => console.log("MongoDB connection error:", err));
+let cachedConnection = null;
+const connectDB = async (req, res, next) => {
+    if (req.path === "/") return next(); // Skip DB check for root health-check
+    
+    try {
+        if (mongoose.connection.readyState >= 1) {
+            return next();
+        }
+        if (!cachedConnection) {
+            cachedConnection = mongoose.connect(process.env.MONGO_URI);
+        }
+        await cachedConnection;
+        next();
+    } catch (err) {
+        console.error("MongoDB connection error:", err);
+        res.status(500).json({ error: "Database connection failed: " + err.message });
+    }
+};
+
 
 app.use(
     cors({
@@ -30,6 +46,7 @@ app.use(
     })
 );
 app.use(express.json());
+app.use(connectDB);
 
 app.get("/", (req, res) => {
     res.send("Backend running...");
