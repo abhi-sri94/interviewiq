@@ -240,6 +240,11 @@ function InterviewPage() {
 
             const data = await response.json();
 
+            if (!response.ok) {
+                setQuestion(`Error: ${data.error || "Failed to generate question. Please try again."}`);
+                return;
+            }
+
             setQuestion(
                 data.question ||
                 data.candidates?.[0]?.content?.parts?.[0]?.text ||
